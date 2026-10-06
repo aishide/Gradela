@@ -45,18 +45,18 @@
 
 <p align="center">
   <a href="#-system-overview">System Overview</a> •
-  <a href="#-architecture--pipeline">Architecture</a> •
-  <a href="#-feature-synthesis-study-efficiency-index-sei">SEI Synthesis</a> •
-  <a href="#-empirical-evaluation--benchmarks">Benchmarks</a> •
+  <a href="#-architecture--pipeline">Architecture & Pipeline</a> •
+  <a href="#-feature-synthesis-study-efficiency-index-sei">Feature Synthesis</a> •
+  <a href="#-empirical-evaluation--benchmarks">Empirical Results</a> •
   <a href="#-behavioral-impact--feature-importance">Feature Importance</a> •
-  <a href="#-risk-stratification--advising-protocols">Advising Matrix</a> •
+  <a href="#-risk-stratification--advising-protocols">Advising Protocols</a> •
   <a href="#-quickstart--usage">Quickstart</a> •
   <a href="#-collaborators">Collaborators</a>
 </p>
 
-</div>
-
 ---
+
+</div>
 
 ## 📌 System Overview
 
@@ -116,121 +116,3 @@ Most academic early-warning systems suffer from an institutional **latency flaw*
   |  * Tier 2 (0.38 <= P < 0.60): Moderate Risk -> Peer Collaborative Learning Pods     |
   |  * Tier 3 (P < 0.38): Low Risk -> Standard Advisory Cadence                         |
   +-------------------------------------------------------------------------------------+
-
-
-
-
-  flowchart TD
-    subgraph S1 ["1. Ingestion & Quality Layer (N = 6,607)"]
-        A[Raw Cohort Data: 20 Dimensions] --> B[Missingness Audit]
-        B --> C[Localized Mode & Median Imputation]
-    end
-
-    subgraph S2 ["2. Behavioral Synthesis Engine"]
-        C --> D[Synthesize Study Efficiency Index: SEI]
-        D --> E[Multivariate Scaling & Normalization]
-    end
-
-    subgraph S3 ["3. Supervised Model Suite (10-Fold CV)"]
-        E --> F[Decision Tree CART]
-        E --> G[Logistic Regression GLM]
-        E --> H[Random Forest Ensemble]
-    end
-
-    subgraph S4 ["4. Calibrated Decision Boundary"]
-        H --> I["Default Cutoff (τ = 0.50)<br/>Recall: 77.10%"]
-        H --> J["Optimal Cutoff (τ* = 0.38)<br/>Recall: 84.04% | F1: 0.8658"]
-    end
-
-    subgraph S5 ["5. Automated Advisory Routing"]
-        J --> K["🔴 Tier 1: High Risk (P ≥ 0.60)<br/>Mandatory 1-on-1 Advising"]
-        J --> L["🟡 Tier 2: Moderate Risk (0.38 ≤ P < 0.60)<br/>Peer Study Pods"]
-        J --> M["🟢 Tier 3: Low Risk (P < 0.38)<br/>Standard Monitoring"]
-    end
-
-    style J fill:#0f172a,stroke:#10b981,stroke-width:2px,color:#fff
-    style K fill:#450a0a,stroke:#ef4444,stroke-width:2px,color:#fff
-    style L fill:#451a03,stroke:#f59e0b,stroke-width:2px,color:#fff
-    style M fill:#022c22,stroke:#10b981,stroke-width:2px,color:#fff
-
-
-
-    🔬 Feature Synthesis: Study Efficiency Index (SEI)Gross study hours alone fail to predict academic mastery if circadian habits and sleep stability are volatile. GRADELA models this behavioral friction via the Study Efficiency Index (SEI):   $$\text{SEI} = \frac{\text{Weekly Study Hours} \times \text{Continuous Assessment Performance}}{\sigma_{\text{sleep}} + \epsilon}$$$\sigma_{\text{sleep}}$ captures rolling weekly sleep standard deviation and circadian disruption.   $\epsilon = 10^{-4}$ provides numeric stabilization for regularized circadian rhythms.   📊 Empirical Evaluation & BenchmarksModels were cross-validated on stratified 10-fold partitions isolating the at-risk cohort ($\text{Exam Score} \le 65$).   
-
-    Model ArchitectureAccuracyROC-AUCRecall (At-Risk)PrecisionF1​-Score🌲 Decision Tree (CART)88.10%0.89172.30%0.78120.7510📈 Logistic Regression90.40%0.92376.85%0.82400.7953🛡️ Random Forest ($\tau = 0.50$)94.80%0.97677.10%0.91200.8356⚡ GRADELA Random Forest ($\tau^ = 0.38$)*93.60%0.97684.04%0.89300.8658
-
-    Decision Boundary TuningIn academic intervention, False Negatives carry irreparable cost (students fail or withdraw without support), while False Positives merely yield proactive tutoring. Shifting the operational boundary to $\tau^* = 0.38$ maximizes coverage without flooding advisors.   
-
-    At-Risk Detection Sensitivity by Decision Cutoff (tau)
-========================================================================================
-Cutoff (tau)    Recall   Visual Distribution (Sensitivity Spectrum)            Status
-----------------------------------------------------------------------------------------
-tau = 0.50      77.10%   [████████████████████████████░░░░░░░░]                Baseline
-tau = 0.44      80.20%   [██████████████████████████████░░░░░░]                Shifted
-tau* = 0.38     84.04%   [████████████████████████████████░░░░]  <- OPTIMAL    (GRADELA)
-tau = 0.30      89.15%   [████████████████████████████████████]                Elevated FP
-========================================================================================
-
-🎯 Behavioral Impact & Feature ImportanceDecomposition of Mean Decrease in Gini Impurity underscores that behavioral habits—not unalterable demographics—steer semester outcomes:   
-
-========================================================================================
-FEATURE DIMENSION                 GINI %    RELATIVE IMPACT (ACTIONABLE VS STATIC)
-========================================================================================
-Class Attendance Rate             36.2%     [████████████████████████████████████]
-Study Efficiency Index (SEI)      29.9%     [██████████████████████████████]
-Prior Assessment Milestones       14.1%     [██████████████]
-Sleep Routine Consistency         9.3%      [█████████]
-Socio-Demographic Indicators      6.8%      [███████]  <- Fixed Background
-Other Environmental Factors       3.7%      [████]
-========================================================================================
-[Actionable Behavioral Vectors: 66.1%]                    [Static Demographics: 6.8%]
-
-Core Insight: Over 66% of student trajectory variance is driven by attendance and efficient study routines. Early interventions can focus squarely on concrete habit modification.   🚦 Risk Stratification & Advising ProtocolsGRADELA automatically maps student probabilities directly into tiered advisory actions:   
-
-Risk TierProbability RangeClassificationOperational Advising Protocol🔴 Tier 1$P(\text{Risk}) \ge 0.60$High RiskImmediate advisor dispatch within 48h; mandatory 1-on-1 diagnostic sessions; structured study hall enrollment.🟡 Tier 2$0.38 \le P < 0.60$Moderate RiskPlacement into peer-led study pods; automated bi-weekly attendance check pings; study-skills workshops.🟢 Tier 3$P(\text{Risk}) < 0.38$Low RiskStandard curriculum monitoring; open access to self-directed resource repositories.
-
-
-📂 Repository Structure
-
-gradela/
-├── data/
-│   ├── raw/                      # Cohort benchmark records (6,607 rows)
-│   └── processed/                # Normalized, imputed, and scaled matrices
-├── R/
-│   ├── 01_data_preprocessing.R   # Mode imputation and missingness checks
-│   ├── 02_feature_engineering.R  # SEI synthesis and interaction logic
-│   ├── 03_model_training.R       # CART, Logistic Regression, Random Forest
-│   ├── 04_threshold_tuning.R     # Cutoff derivation and ROC optimization
-│   └── 05_alert_dispatch.R       # Automated student triage generator
-├── models/
-│   └── gradela_rf_final.rds      # Serialized production ensemble model
-├── reports/
-│   ├── figures/                  # ROC curves, sensitivity curves, Gini ranks
-│   └── student_risk_alerts.csv   # Target early-warning advisory roster
-├── config.yml                    # Pipeline parameters and cutoff thresholds
-├── run_pipeline.R                # Master orchestration pipeline
-└── README.md
-
-
-🚀 Quickstart & Usage1. RequirementsR $\ge$ 4.2.0Install core dependencies:   Rinstall.packages(c(
-  "tidyverse",
-  "caret",
-  "randomForest",
-  "pROC",
-  "ROCR",
-  "yaml"
-))
-2. ExecutionBash# Clone repository
-git clone [https://github.com/your-institution/gradela.git](https://github.com/your-institution/gradela.git)
-cd gradela
-
-# Run the end-to-end training and alert generation pipeline
-Rscript run_pipeline.R
-3. Generated Advisory OutputTriage alerts are compiled directly to reports/student_risk_alerts.csv:   Plaintext+-----------+-----------------+-----------+-----------------+--------------------------------+
-| StudentID | RiskProbability | RiskTier  | PrimaryDriver   | RecommendedIntervention        |
-+-----------+-----------------+-----------+-----------------+--------------------------------+
-| ST-0194   | 0.784           | High      | Attendance      | 1-on-1 Counseling + Study Hall |
-| ST-1048   | 0.492           | Moderate  | Low SEI         | Peer Tutoring (STEM Pod)       |
-| ST-3302   | 0.118           | Low       | None            | Standard Monitoring            |
-+-----------+-----------------+-----------+-----------------+--------------------------------+
-👥 CollaboratorsCollaboratorRoleFocus AreasAishi DeCore Developer & ResearcherMachine Learning Architecture, SEI Formulation & Behavioral ModelingParthiv AbhaniCore Developer & ResearcherData Engineering, Pipeline Orchestration & Threshold Calibration
