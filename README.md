@@ -261,4 +261,44 @@ gradela/
 - **R $\ge$ 4.2.0**
 - Install core dependencies:
 
+
+## 🛡️ Risk Stratification & Advising Protocols
+
+GRADELA automatically maps student probabilities directly into tiered advisory actions:
+
+| Risk Tier | Probability Range | Classification | Operational Advising Protocol |
+|:---:|:---:|:---:|---|
+| **Tier 1** | $P(\text{Risk}) \ge 0.60$ | **High Risk** | Immediate advisor dispatch within 48h; mandatory 1-on-1 diagnostic sessions; structured study hall enrollment. |
+| **Tier 2** | $0.38 \le P < 0.60$ | **Moderate Risk** | Placement into peer-led study pods; automated bi-weekly attendance check pings; study-skills workshops. |
+| **Tier 3** | $P(\text{Risk}) < 0.38$ | **Low Risk** | Standard curriculum monitoring; open access to self-directed resource repositories. |
+
+---
+
+## 📂 Repository Structure
+
+```bash
+gradela/
+├── data/
+│   ├── raw/                      # Cohort benchmark records (6,607 rows)
+│   └── processed/                # Normalized, imputed, and scaled matrices
+├── R/
+│   ├── 01_data_preprocessing.R   # Mode imputation and missingness checks
+│   ├── 02_feature_engineering.R  # SEI synthesis and interaction logic
+│   ├── 03_model_training.R       # CART, Logistic Regression, Random Forest
+│   ├── 04_threshold_tuning.R     # Cutoff derivation and ROC optimization
+│   └── 05_alert_dispatch.R       # Automated student triage generator
+├── models/
+│   └── gradela_rf_final.rds      # Serialized production ensemble model
+├── reports/
+│   ├── figures/                  # ROC curves, sensitivity curves, Gini ranks
+│   └── student_risk_alerts.csv   # Target early-warning advisory roster
+├── config.yml                    # Pipeline parameters and cutoff thresholds
+├── run_pipeline.R                # Master orchestration pipeline
+└── README.md
 ```
+
+
+
+
+
+
