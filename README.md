@@ -253,14 +253,6 @@ gradela/
 └── README.md
 ```
 
----
-
-## 🚀 Quickstart & Usage
-
-### 1. Requirements
-- **R $\ge$ 4.2.0**
-- Install core dependencies:
-
 
 ## 🛡️ Risk Stratification & Advising Protocols
 
@@ -297,20 +289,57 @@ gradela/
 └── README.md
 ```
 
+---
+
+## 🚀 Quickstart & Usage
+
+### 1. Requirements
+- **R $\ge$ 4.2.0**
+- Install core dependencies:
+
+```R
+install.packages(c(
+"tidyverse",
+"caret",
+"random Forest",
+"PROC",
+"ROCR",
+"yaml"
+))
+```
+
+### 2. Execution
+
+```bash
+
+#Clone repository
+git clone https://github.com/your-institution/gradela.git
+cd gradela
+
+# Run the end-to-end training and alert generation pipeline
+Rscript run pipeline.R
+
+### 3. Generated Advisory Output
+Triage alerts are compiled directly to reports/student_risk_alerts.csv`:
+
+```text
++-----------+-----------------+-----------+-----------------+--------------------------------+
+| StudentID | RiskProbability | RiskTier  | PrimaryDriver   | RecommendedIntervention        |
++-----------+-----------------+-----------+-----------------+--------------------------------+
+| ST-0194   | 0.784           | High      | Attendance      | 1-on-1 Counseling + Study Hall |
+| ST-1048   | 0.492           | Moderate  | Low SEI         | Peer Tutoring (STEM Pod)       |
+| ST-3302   | 0.118           | Low       | None            | Standard Monitoring            |
++-----------+-----------------+-----------+-----------------+--------------------------------+
 
 
 
 
+## 👥 Collaborators
 
-
-
-
-
-
-
-
-
-
+| Collaborator | Role | Focus Areas |
+|:---|:---:|:---|
+| **Aishi De** | Core Developer & Researcher | Machine Learning Architecture, SEI Formulation & Behavioral Modeling |
+| **Parthiv Abhani** | Core Developer & Researcher | Data Engineering, Pipeline Orchestration & Threshold Calibration |
 
 
 
