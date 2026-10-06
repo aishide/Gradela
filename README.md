@@ -116,3 +116,19 @@ Most academic early-warning systems suffer from an institutional **latency flaw*
   |  * Tier 2 (0.38 <= P < 0.60): Moderate Risk -> Peer Collaborative Learning Pods     |
   |  * Tier 3 (P < 0.38): Low Risk -> Standard Advisory Cadence                         |
   +-------------------------------------------------------------------------------------+
+```
+## 🎯 Behavioral Impact & Feature Importance
+
+Decomposition of Mean Decrease in Gini Impurity underscores that behavioral habits—not unalterable demographics—steer semester outcomes:
+
+========================================================================================
+FEATURE DIMENSION                 GINI %    RELATIVE IMPACT (ACTIONABLE VS STATIC)
+========================================================================================
+Class Attendance Rate             36.2%     [████████████████████████████████████]
+Study Efficiency Index (SEI)      29.9%     [██████████████████████████████]
+Prior Assessment Milestones       14.1%     [██████████████]
+Sleep Routine Consistency         9.3%      [█████████]
+Socio-Demographic Indicators      6.8%      [███████]  <- Fixed Background
+Other Environmental Factors       3.7%      [████]
+========================================================================================
+[Actionable Behavioral Vectors: 66.1%]                    [Static Demographics: 6.8%]
