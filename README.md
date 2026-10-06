@@ -344,7 +344,8 @@ Triage alerts are compiled directly to reports/student_risk_alerts.csv`:
     <tr>
       <th align="left">Collaborator</th>
       <th align="left">Role</th>
-      <th align="left">Focus Areas</th>
+      <th align="left">Core Technical Focus</th>
+      <th align="left">Shared Deliverables Breakdown</th>
     </tr>
   </thead>
   <tbody>
@@ -352,15 +353,26 @@ Triage alerts are compiled directly to reports/student_risk_alerts.csv`:
       <td align="left"><b>Aishi De</b></td>
       <td align="left">Core Developer & Researcher</td>
       <td align="left">Machine Learning Architecture, SEI Formulation & Behavioral Modeling</td>
+      <td align="left">
+        <b>Case Study Model:</b> SEI behavioral formulation & model benchmarking (CART, GLM)<br/>
+        <b>R Programming Code:</b> Feature synthesis (<code>02_feature_engineering.R</code>) & model training suite (<code>03_model_training.R</code>)<br/>
+        <b>Case Study Presentation:</b> Slide deck content structuring, methodology write-up & empirical metrics analysis<br/>
+        <b>Case Study Video:</b> Technical methodology walkthrough, scriptwriting & algorithm narration
+      </td>
     </tr>
     <tr>
       <td align="left"><b>Parthiv Abhani</b></td>
       <td align="left">Core Developer & Researcher</td>
       <td align="left">Data Engineering, Pipeline Orchestration & Threshold Calibration</td>
+      <td align="left">
+        <b>Case Study Model:</b> Stratified CV cross-validation design & cost-sensitive threshold optimization ($\tau^* = 0.38$)<br/>
+        <b>R Programming Code:</b> Data preprocessing/imputation (<code>01_data_preprocessing.R</code>) & alert dispatch pipeline (<code>05_alert_dispatch.R</code>)<br/>
+        <b>Case Study Presentation:</b> Architecture diagrams, UI telemetry flowcharts & visualization formatting<br/>
+        <b>Case Study Video:</b> Live pipeline demonstration, video recording/editing & telemetry dashboard walkthrough
+      </td>
     </tr>
   </tbody>
 </table>
 
 </div>
-
 
