@@ -333,15 +333,34 @@ Triage alerts are compiled directly to reports/student_risk_alerts.csv`:
 +-----------+-----------------+-----------+-----------------+--------------------------------+
 
 
-
+```
 
 ## 👥 Collaborators
 
-| Collaborator | Role | Focus Areas |
-|:---|:---:|:---|
-| **Aishi De** | Core Developer & Researcher | Machine Learning Architecture, SEI Formulation & Behavioral Modeling |
-| **Parthiv Abhani** | Core Developer & Researcher | Data Engineering, Pipeline Orchestration & Threshold Calibration |
+<div align="center">
 
+<table>
+  <thead>
+    <tr>
+      <th align="left">Collaborator</th>
+      <th align="left">Role</th>
+      <th align="left">Focus Areas</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td align="left"><b>Aishi De</b></td>
+      <td align="left">Core Developer & Researcher</td>
+      <td align="left">Machine Learning Architecture, SEI Formulation & Behavioral Modeling</td>
+    </tr>
+    <tr>
+      <td align="left"><b>Parthiv Abhani</b></td>
+      <td align="left">Core Developer & Researcher</td>
+      <td align="left">Data Engineering, Pipeline Orchestration & Threshold Calibration</td>
+    </tr>
+  </tbody>
+</table>
 
+</div>
 
 
