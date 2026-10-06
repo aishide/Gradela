@@ -318,6 +318,7 @@ cd gradela
 
 # Run the end-to-end training and alert generation pipeline
 Rscript run pipeline.R
+```
 
 ### 3. Generated Advisory Output
 Triage alerts are compiled directly to reports/student_risk_alerts.csv`:
