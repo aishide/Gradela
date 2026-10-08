@@ -35,6 +35,7 @@
 </p>
 
 <p align="center">
+  <a href="https://gradela-ktc2.vercel.app/"><img src="https://img.shields.io/badge/Live%20Telemetry%20Radar-gradela--ktc2.vercel.app-10B981?style=for-the-badge&logo=vercel&logoColor=white" alt="Live Demo" /></a>
   <a href="#-system-overview"><img src="https://img.shields.io/badge/Language-R%20%3E%3D%204.2-276DC3?style=for-the-badge&logo=r&logoColor=white" alt="R" /></a>
   <a href="#-architecture--pipeline"><img src="https://img.shields.io/badge/Architecture-Random%20Forest%20%7C%20GLM-8B5CF6?style=for-the-badge&logo=probot&logoColor=white" alt="ML" /></a>
   <a href="#-empirical-evaluation--benchmarks"><img src="https://img.shields.io/badge/ROC--AUC-0.976-10B981?style=for-the-badge&logo=databricks&logoColor=white" alt="ROC-AUC" /></a>
@@ -44,6 +45,7 @@
 </p>
 
 <p align="center">
+  <a href="https://gradela-ktc2.vercel.app/"><b>🌐 Open Live Web App</b></a> •
   <a href="#-system-overview">System Overview</a> •
   <a href="#-architecture--pipeline">Architecture &amp; Pipeline</a> •
   <a href="#-feature-synthesis-study-efficiency-index-sei">Feature Synthesis</a> •
@@ -280,17 +282,21 @@ install.packages(c(
 ))
 ```
 
-### 2. Execution
+### 2. Execution & Live Deployment
+
+- **🌐 Live Web Telemetry Radar:** [https://gradela-ktc2.vercel.app/](https://gradela-ktc2.vercel.app/)
 
 ```bash
 # Clone repository
-git clone https://github.com/your-institution/gradela.git
-cd gradela
+git clone https://github.com/aishide/Gradela.git
+cd Gradela
 
 # Run the end-to-end training and alert generation pipeline
 Rscript run_pipeline.R
 
-# (Optional) Launch interactive R Shiny LMS Early-Warning Dashboard
+# (Optional) Launch interactive web telemetry app locally
+./start_app.sh
+# or launch interactive R Shiny LMS Early-Warning Dashboard
 Rscript -e "shiny::runApp('R/shiny_app.R')"
 ```
 

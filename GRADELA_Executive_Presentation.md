@@ -12,6 +12,7 @@
 - **Project Title:** GRADELA — GRADient Evaluation & Learned Academic Performance Radar
 - **Theme:** Student Performance Prediction, Early-Warning Telemetry, and Proactive Advising
 - **Core Proposition:** Shifting institutional student evaluation from retroactive post-exam failure notices to proactive, early-semester predictive telemetry.
+- **Live Interactive Radar Dashboard:** [https://gradela-ktc2.vercel.app/](https://gradela-ktc2.vercel.app/)
 
 ---
 
@@ -141,5 +142,6 @@
   - Maintained high sensitivity (82.16% at baseline, 84.04% at calibrated $\tau^* = 0.38$).
   - Delivered production-ready triage spreadsheet (`gradela_intervention_roster.csv`).
 - **Future Work & Deployment:**
+  - Production static web deployment live at [https://gradela-ktc2.vercel.app/](https://gradela-ktc2.vercel.app/).
   - Live Learning Management System (LMS) dashboard integration via an R Shiny interface (`R/shiny_app.R`).
   - Periodic midterm grade streaming for continuous dynamic telemetry.
