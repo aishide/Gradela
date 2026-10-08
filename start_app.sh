@@ -1,15 +1,16 @@
 #!/bin/bash
-# EduPredict AI - Start Web Application Server
-# Author: Parthiv Abhani (23070521106)
+# GRADELA - Start Web Application Server
+# Investigators: Aishi De (23070521008) & Parthiv Abhani (23070521106)
 
 DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
 cd "$DIR/web_app"
 
 PORT=5050
 echo "=========================================================="
-echo " Starting EduPredict AI - Student Performance Platform"
-echo " Semester 7 Data Science Mini Project"
-echo " Author: Parthiv Abhani (PRN: 23070521106)"
+echo " Starting GRADELA - Student Performance Platform"
+echo " Semester 7 Business Intelligence Mini Project"
+echo " Investigators: Aishi De & Parthiv Abhani"
+echo " Guide: Dr. Snehlata Wankhade"
 echo " URL: http://localhost:$PORT"
 echo "=========================================================="
 

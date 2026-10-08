@@ -5,7 +5,7 @@
   "rewrites": [
     {
       "source": "/download-notebook",
-      "destination": "/student_performance_prediction.ipynb"
+      "destination": "/GRADELA_GRADient_Evaluation_&_Learned_Academic_Performance_Radar_(Aishi_De_&_Parthiv_Abhani).ipynb"
     }
   ]
 }

@@ -21,12 +21,11 @@ nb.metadata = {
 cells = []
 
 # ==================== CELL 1: TITLE & METADATA ====================
-cells.append(nbf.v4.new_markdown_cell("""# Student Performance Prediction Using Data Science and Machine Learning
-### **Proposed Solution - Mini Project (CA 3)**
-**Student Name:** Parthiv Abhani  
-**Roll / PRN:** 23070521106  
-**Subject:** Data Science (Semester 7)  
-**Under the Guidance of:** Dr. Smita Singh  
+cells.append(nbf.v4.new_markdown_cell("""# GRADELA - Student Performance Prediction Using Machine Learning
+### **GRADient Evaluation & Learned Academic Performance Radar (CA 3)**
+**Investigators:** Aishi De (23070521008) & Parthiv Abhani (23070521106)  
+**Subject:** Business Intelligence (Semester 7)  
+**Under the Guidance of:** Dr. Snehlata Wankhade  
 **Repository Dataset:** UCI Machine Learning Repository - Student Performance Dataset (*Cortez & Silva, 2008*)  
 
 ---
@@ -690,11 +689,11 @@ joblib.dump(scaler, os.path.join(models_dir, 'scaler.pkl'))
 
 # Prepare metadata summary for web app
 metadata = {
-    'project_title': 'Student Performance Prediction Using Data Science and Machine Learning',
-    'student_name': 'Parthiv Abhani',
-    'student_prn': '23070521106',
-    'subject': 'Data Science',
-    'faculty_guide': 'Dr. Smita Singh',
+    'project_title': 'GRADELA - Student Performance Prediction & Academic Risk Intelligence',
+    'student_name': 'Aishi De & Parthiv Abhani',
+    'student_prn': '23070521008 & 23070521106',
+    'subject': 'Business Intelligence',
+    'faculty_guide': 'Dr. Snehlata Wankhade',
     'dataset': 'UCI Student Performance Dataset (Cortez & Silva, 2008)',
     'total_samples': len(df_por),
     'features_count': len(features_with_grades),

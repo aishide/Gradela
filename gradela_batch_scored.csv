@@ -1,0 +1,26 @@
+student_id,risk_probability,risk_tier,primary_driver,recommended_intervention,predicted_exam_score
+ST-0001,0.12,Low Risk (Tier 3),Insufficient Study Volume,Standard Curriculum Monitoring; Self-Directed Academic Portal Access,69.4
+ST-0002,0.4,Moderate Risk (Tier 2),Insufficient Study Volume,Assignment to Peer Collaborative Learning Pod; Bi-Weekly Attendance Ping,66.28
+ST-0003,0.62,High Risk (Tier 1),Severe Attendance Deficit,Immediate 1-on-1 Clinical Advising within 48h; Mandatory Study Hall,64.11
+ST-0004,0.21,Low Risk (Tier 3),Multivariate Risk Factor,Standard Curriculum Monitoring; Self-Directed Academic Portal Access,66.7
+ST-0005,0.44,Moderate Risk (Tier 2),Insufficient Study Volume,Assignment to Peer Collaborative Learning Pod; Bi-Weekly Attendance Ping,66.15
+ST-0006,0.56,Moderate Risk (Tier 2),Severe Attendance Deficit,Assignment to Peer Collaborative Learning Pod; Bi-Weekly Attendance Ping,65.57
+ST-0007,0.58,Moderate Risk (Tier 2),Insufficient Study Volume,Assignment to Peer Collaborative Learning Pod; Bi-Weekly Attendance Ping,64.51
+ST-0008,0.0,Low Risk (Tier 3),Circadian Irregularity,Standard Curriculum Monitoring; Self-Directed Academic Portal Access,72.63
+ST-0009,0.73,High Risk (Tier 1),Severe Attendance Deficit,Immediate 1-on-1 Clinical Advising within 48h; Mandatory Study Hall,63.79
+ST-0010,0.68,High Risk (Tier 1),Severe Attendance Deficit,Immediate 1-on-1 Clinical Advising within 48h; Mandatory Study Hall,62.56
+ST-0011,0.48,Moderate Risk (Tier 2),Severe Attendance Deficit,Assignment to Peer Collaborative Learning Pod; Bi-Weekly Attendance Ping,65.34
+ST-0012,0.26,Low Risk (Tier 3),Insufficient Study Volume,Standard Curriculum Monitoring; Self-Directed Academic Portal Access,65.57
+ST-0013,0.59,Moderate Risk (Tier 2),Severe Attendance Deficit,Assignment to Peer Collaborative Learning Pod; Bi-Weekly Attendance Ping,64.69
+ST-0014,0.3,Low Risk (Tier 3),Circadian Irregularity,Standard Curriculum Monitoring; Self-Directed Academic Portal Access,66.38
+ST-0015,0.3,Low Risk (Tier 3),Circadian Irregularity,Standard Curriculum Monitoring; Self-Directed Academic Portal Access,66.67
+ST-0016,0.61,High Risk (Tier 1),Severe Attendance Deficit,Immediate 1-on-1 Clinical Advising within 48h; Mandatory Study Hall,65.53
+ST-0017,0.22,Low Risk (Tier 3),Insufficient Study Volume,Standard Curriculum Monitoring; Self-Directed Academic Portal Access,67.72
+ST-0018,0.21,Low Risk (Tier 3),Severe Attendance Deficit,Standard Curriculum Monitoring; Self-Directed Academic Portal Access,66.47
+ST-0019,0.28,Low Risk (Tier 3),Low Academic Motivation,Standard Curriculum Monitoring; Self-Directed Academic Portal Access,67.08
+ST-0020,0.11,Low Risk (Tier 3),Insufficient Study Volume,Standard Curriculum Monitoring; Self-Directed Academic Portal Access,68.08
+ST-0021,0.15,Low Risk (Tier 3),Multivariate Risk Factor,Standard Curriculum Monitoring; Self-Directed Academic Portal Access,66.75
+ST-0022,0.34,Low Risk (Tier 3),Insufficient Study Volume,Standard Curriculum Monitoring; Self-Directed Academic Portal Access,66.85
+ST-0023,0.84,High Risk (Tier 1),Severe Attendance Deficit,Immediate 1-on-1 Clinical Advising within 48h; Mandatory Study Hall,66.14
+ST-0024,0.1,Low Risk (Tier 3),Low Academic Motivation,Standard Curriculum Monitoring; Self-Directed Academic Portal Access,69.44
+ST-0025,0.09,Low Risk (Tier 3),Low Academic Motivation,Standard Curriculum Monitoring; Self-Directed Academic Portal Access,69.88

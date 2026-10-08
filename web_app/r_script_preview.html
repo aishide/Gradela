@@ -1,0 +1,1297 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>GRADELA_Pipeline.R - R Source Code Preview</title>
+  <style>
+    :root {
+      --bg: #0b0f19;
+      --card-bg: #111827;
+      --text: #f3f4f6;
+      --text-muted: #9ca3af;
+      --border: rgba(255, 255, 255, 0.1);
+      --accent: #6366f1;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      background-color: var(--bg);
+      color: var(--text);
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      padding: 1.5rem;
+      min-height: 100vh;
+    }
+    .header-bar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 0.75rem 1.25rem;
+      margin-bottom: 1.25rem;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      backdrop-filter: blur(10px);
+    }
+    .file-info {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      font-size: 0.9rem;
+      font-weight: 600;
+    }
+    .badge {
+      background: #1e1b4b;
+      color: #818cf8;
+      border: 1px solid #4338ca;
+      padding: 0.2rem 0.6rem;
+      border-radius: 6px;
+      font-size: 0.75rem;
+      font-weight: 700;
+    }
+    .btn-copy {
+      background: #374151;
+      color: #f9fafb;
+      border: 1px solid #4b5563;
+      padding: 0.4rem 0.9rem;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 0.8rem;
+      font-weight: 600;
+      transition: all 0.2s;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+    }
+    .btn-copy:hover {
+      background: #4b5563;
+      border-color: #6b7280;
+    }
+    .code-container {
+      background: #1e1e1e;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      overflow-x: auto;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+    }
+    .source-code {
+      font-family: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, Courier, monospace;
+      font-size: 0.86rem;
+      line-height: 1.55;
+    }
+    .source-code table {
+      border-collapse: collapse;
+      width: 100%;
+    }
+    .source-code td.linenos {
+      user-select: none;
+      text-align: right;
+      padding: 1rem 0.75rem 1rem 1rem;
+      background: #18181b;
+      color: #52525b;
+      border-right: 1px solid #27272a;
+      width: 45px;
+      vertical-align: top;
+    }
+    .source-code td.code {
+      padding: 1rem 1.25rem;
+      vertical-align: top;
+      background: #18181b;
+    }
+    .source-code pre {
+      margin: 0;
+      white-space: pre;
+    }
+    pre { line-height: 125%; }
+td.linenos .normal { color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px; }
+span.linenos { color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px; }
+td.linenos .special { color: #000000; background-color: #ffffc0; padding-left: 5px; padding-right: 5px; }
+span.linenos.special { color: #000000; background-color: #ffffc0; padding-left: 5px; padding-right: 5px; }
+.source-code .hll { background-color: #49483e }
+.source-code { background: #272822; color: #F8F8F2 }
+.source-code .c { color: #959077 } /* Comment */
+.source-code .err { color: #ED007E; background-color: #1E0010 } /* Error */
+.source-code .esc { color: #F8F8F2 } /* Escape */
+.source-code .g { color: #F8F8F2 } /* Generic */
+.source-code .k { color: #66D9EF } /* Keyword */
+.source-code .l { color: #AE81FF } /* Literal */
+.source-code .n { color: #F8F8F2 } /* Name */
+.source-code .o { color: #FF4689 } /* Operator */
+.source-code .x { color: #F8F8F2 } /* Other */
+.source-code .p { color: #F8F8F2 } /* Punctuation */
+.source-code .ch { color: #959077 } /* Comment.Hashbang */
+.source-code .cm { color: #959077 } /* Comment.Multiline */
+.source-code .cp { color: #959077 } /* Comment.Preproc */
+.source-code .cpf { color: #959077 } /* Comment.PreprocFile */
+.source-code .c1 { color: #959077 } /* Comment.Single */
+.source-code .cs { color: #959077 } /* Comment.Special */
+.source-code .gd { color: #FF4689 } /* Generic.Deleted */
+.source-code .ge { color: #F8F8F2; font-style: italic } /* Generic.Emph */
+.source-code .ges { color: #F8F8F2; font-weight: bold; font-style: italic } /* Generic.EmphStrong */
+.source-code .gr { color: #FF4689 } /* Generic.Error */
+.source-code .gh { color: #F8F8F2 } /* Generic.Heading */
+.source-code .gi { color: #A6E22E } /* Generic.Inserted */
+.source-code .go { color: #66D9EF } /* Generic.Output */
+.source-code .gp { color: #FF4689; font-weight: bold } /* Generic.Prompt */
+.source-code .gs { color: #F8F8F2; font-weight: bold } /* Generic.Strong */
+.source-code .gu { color: #959077 } /* Generic.Subheading */
+.source-code .gt { color: #66D9EF } /* Generic.Traceback */
+.source-code .kc { color: #66D9EF } /* Keyword.Constant */
+.source-code .kd { color: #66D9EF } /* Keyword.Declaration */
+.source-code .kn { color: #FF4689 } /* Keyword.Namespace */
+.source-code .kp { color: #66D9EF } /* Keyword.Pseudo */
+.source-code .kr { color: #66D9EF } /* Keyword.Reserved */
+.source-code .kt { color: #66D9EF } /* Keyword.Type */
+.source-code .ld { color: #E6DB74 } /* Literal.Date */
+.source-code .m { color: #AE81FF } /* Literal.Number */
+.source-code .s { color: #E6DB74 } /* Literal.String */
+.source-code .na { color: #A6E22E } /* Name.Attribute */
+.source-code .nb { color: #A6E22E } /* Name.Builtin */
+.source-code .nc { color: #A6E22E } /* Name.Class */
+.source-code .no { color: #66D9EF } /* Name.Constant */
+.source-code .nd { color: #A6E22E } /* Name.Decorator */
+.source-code .ni { color: #F8F8F2 } /* Name.Entity */
+.source-code .ne { color: #A6E22E } /* Name.Exception */
+.source-code .nf { color: #A6E22E } /* Name.Function */
+.source-code .nl { color: #F8F8F2 } /* Name.Label */
+.source-code .nn { color: #F8F8F2 } /* Name.Namespace */
+.source-code .nx { color: #A6E22E } /* Name.Other */
+.source-code .py { color: #F8F8F2 } /* Name.Property */
+.source-code .nt { color: #FF4689 } /* Name.Tag */
+.source-code .nv { color: #F8F8F2 } /* Name.Variable */
+.source-code .ow { color: #FF4689 } /* Operator.Word */
+.source-code .pm { color: #F8F8F2 } /* Punctuation.Marker */
+.source-code .w { color: #F8F8F2 } /* Text.Whitespace */
+.source-code .mb { color: #AE81FF } /* Literal.Number.Bin */
+.source-code .mf { color: #AE81FF } /* Literal.Number.Float */
+.source-code .mh { color: #AE81FF } /* Literal.Number.Hex */
+.source-code .mi { color: #AE81FF } /* Literal.Number.Integer */
+.source-code .mo { color: #AE81FF } /* Literal.Number.Oct */
+.source-code .sa { color: #E6DB74 } /* Literal.String.Affix */
+.source-code .sb { color: #E6DB74 } /* Literal.String.Backtick */
+.source-code .sc { color: #E6DB74 } /* Literal.String.Char */
+.source-code .dl { color: #E6DB74 } /* Literal.String.Delimiter */
+.source-code .sd { color: #E6DB74 } /* Literal.String.Doc */
+.source-code .s2 { color: #E6DB74 } /* Literal.String.Double */
+.source-code .se { color: #AE81FF } /* Literal.String.Escape */
+.source-code .sh { color: #E6DB74 } /* Literal.String.Heredoc */
+.source-code .si { color: #E6DB74 } /* Literal.String.Interpol */
+.source-code .sx { color: #E6DB74 } /* Literal.String.Other */
+.source-code .sr { color: #E6DB74 } /* Literal.String.Regex */
+.source-code .s1 { color: #E6DB74 } /* Literal.String.Single */
+.source-code .ss { color: #E6DB74 } /* Literal.String.Symbol */
+.source-code .bp { color: #A6E22E } /* Name.Builtin.Pseudo */
+.source-code .fm { color: #A6E22E } /* Name.Function.Magic */
+.source-code .vc { color: #F8F8F2 } /* Name.Variable.Class */
+.source-code .vg { color: #F8F8F2 } /* Name.Variable.Global */
+.source-code .vi { color: #F8F8F2 } /* Name.Variable.Instance */
+.source-code .vm { color: #F8F8F2 } /* Name.Variable.Magic */
+.source-code .il { color: #AE81FF } /* Literal.Number.Integer.Long */
+  </style>
+</head>
+<body>
+  <div class="header-bar">
+    <div class="file-info">
+      <span style="font-size: 1.2rem;">📄</span>
+      <span>GRADELA_Pipeline.R</span>
+      <span class="badge">R Script (CRAN / Caret)</span>
+      <span style="color: var(--text-muted); font-size: 0.8rem;">536 lines &bull; Extracted from Gradela-main</span>
+    </div>
+    <button class="btn-copy" id="btnCopy" onclick="copyCode()">
+      <span>📋</span> <span id="btnCopyText">Copy Code</span>
+    </button>
+  </div>
+
+  <div class="code-container">
+    <div class="source-code"><table class="source-codetable"><tr><td class="linenos"><div class="linenodiv"><pre><span class="normal">  1</span>
+<span class="normal">  2</span>
+<span class="normal">  3</span>
+<span class="normal">  4</span>
+<span class="normal">  5</span>
+<span class="normal">  6</span>
+<span class="normal">  7</span>
+<span class="normal">  8</span>
+<span class="normal">  9</span>
+<span class="normal"> 10</span>
+<span class="normal"> 11</span>
+<span class="normal"> 12</span>
+<span class="normal"> 13</span>
+<span class="normal"> 14</span>
+<span class="normal"> 15</span>
+<span class="normal"> 16</span>
+<span class="normal"> 17</span>
+<span class="normal"> 18</span>
+<span class="normal"> 19</span>
+<span class="normal"> 20</span>
+<span class="normal"> 21</span>
+<span class="normal"> 22</span>
+<span class="normal"> 23</span>
+<span class="normal"> 24</span>
+<span class="normal"> 25</span>
+<span class="normal"> 26</span>
+<span class="normal"> 27</span>
+<span class="normal"> 28</span>
+<span class="normal"> 29</span>
+<span class="normal"> 30</span>
+<span class="normal"> 31</span>
+<span class="normal"> 32</span>
+<span class="normal"> 33</span>
+<span class="normal"> 34</span>
+<span class="normal"> 35</span>
+<span class="normal"> 36</span>
+<span class="normal"> 37</span>
+<span class="normal"> 38</span>
+<span class="normal"> 39</span>
+<span class="normal"> 40</span>
+<span class="normal"> 41</span>
+<span class="normal"> 42</span>
+<span class="normal"> 43</span>
+<span class="normal"> 44</span>
+<span class="normal"> 45</span>
+<span class="normal"> 46</span>
+<span class="normal"> 47</span>
+<span class="normal"> 48</span>
+<span class="normal"> 49</span>
+<span class="normal"> 50</span>
+<span class="normal"> 51</span>
+<span class="normal"> 52</span>
+<span class="normal"> 53</span>
+<span class="normal"> 54</span>
+<span class="normal"> 55</span>
+<span class="normal"> 56</span>
+<span class="normal"> 57</span>
+<span class="normal"> 58</span>
+<span class="normal"> 59</span>
+<span class="normal"> 60</span>
+<span class="normal"> 61</span>
+<span class="normal"> 62</span>
+<span class="normal"> 63</span>
+<span class="normal"> 64</span>
+<span class="normal"> 65</span>
+<span class="normal"> 66</span>
+<span class="normal"> 67</span>
+<span class="normal"> 68</span>
+<span class="normal"> 69</span>
+<span class="normal"> 70</span>
+<span class="normal"> 71</span>
+<span class="normal"> 72</span>
+<span class="normal"> 73</span>
+<span class="normal"> 74</span>
+<span class="normal"> 75</span>
+<span class="normal"> 76</span>
+<span class="normal"> 77</span>
+<span class="normal"> 78</span>
+<span class="normal"> 79</span>
+<span class="normal"> 80</span>
+<span class="normal"> 81</span>
+<span class="normal"> 82</span>
+<span class="normal"> 83</span>
+<span class="normal"> 84</span>
+<span class="normal"> 85</span>
+<span class="normal"> 86</span>
+<span class="normal"> 87</span>
+<span class="normal"> 88</span>
+<span class="normal"> 89</span>
+<span class="normal"> 90</span>
+<span class="normal"> 91</span>
+<span class="normal"> 92</span>
+<span class="normal"> 93</span>
+<span class="normal"> 94</span>
+<span class="normal"> 95</span>
+<span class="normal"> 96</span>
+<span class="normal"> 97</span>
+<span class="normal"> 98</span>
+<span class="normal"> 99</span>
+<span class="normal">100</span>
+<span class="normal">101</span>
+<span class="normal">102</span>
+<span class="normal">103</span>
+<span class="normal">104</span>
+<span class="normal">105</span>
+<span class="normal">106</span>
+<span class="normal">107</span>
+<span class="normal">108</span>
+<span class="normal">109</span>
+<span class="normal">110</span>
+<span class="normal">111</span>
+<span class="normal">112</span>
+<span class="normal">113</span>
+<span class="normal">114</span>
+<span class="normal">115</span>
+<span class="normal">116</span>
+<span class="normal">117</span>
+<span class="normal">118</span>
+<span class="normal">119</span>
+<span class="normal">120</span>
+<span class="normal">121</span>
+<span class="normal">122</span>
+<span class="normal">123</span>
+<span class="normal">124</span>
+<span class="normal">125</span>
+<span class="normal">126</span>
+<span class="normal">127</span>
+<span class="normal">128</span>
+<span class="normal">129</span>
+<span class="normal">130</span>
+<span class="normal">131</span>
+<span class="normal">132</span>
+<span class="normal">133</span>
+<span class="normal">134</span>
+<span class="normal">135</span>
+<span class="normal">136</span>
+<span class="normal">137</span>
+<span class="normal">138</span>
+<span class="normal">139</span>
+<span class="normal">140</span>
+<span class="normal">141</span>
+<span class="normal">142</span>
+<span class="normal">143</span>
+<span class="normal">144</span>
+<span class="normal">145</span>
+<span class="normal">146</span>
+<span class="normal">147</span>
+<span class="normal">148</span>
+<span class="normal">149</span>
+<span class="normal">150</span>
+<span class="normal">151</span>
+<span class="normal">152</span>
+<span class="normal">153</span>
+<span class="normal">154</span>
+<span class="normal">155</span>
+<span class="normal">156</span>
+<span class="normal">157</span>
+<span class="normal">158</span>
+<span class="normal">159</span>
+<span class="normal">160</span>
+<span class="normal">161</span>
+<span class="normal">162</span>
+<span class="normal">163</span>
+<span class="normal">164</span>
+<span class="normal">165</span>
+<span class="normal">166</span>
+<span class="normal">167</span>
+<span class="normal">168</span>
+<span class="normal">169</span>
+<span class="normal">170</span>
+<span class="normal">171</span>
+<span class="normal">172</span>
+<span class="normal">173</span>
+<span class="normal">174</span>
+<span class="normal">175</span>
+<span class="normal">176</span>
+<span class="normal">177</span>
+<span class="normal">178</span>
+<span class="normal">179</span>
+<span class="normal">180</span>
+<span class="normal">181</span>
+<span class="normal">182</span>
+<span class="normal">183</span>
+<span class="normal">184</span>
+<span class="normal">185</span>
+<span class="normal">186</span>
+<span class="normal">187</span>
+<span class="normal">188</span>
+<span class="normal">189</span>
+<span class="normal">190</span>
+<span class="normal">191</span>
+<span class="normal">192</span>
+<span class="normal">193</span>
+<span class="normal">194</span>
+<span class="normal">195</span>
+<span class="normal">196</span>
+<span class="normal">197</span>
+<span class="normal">198</span>
+<span class="normal">199</span>
+<span class="normal">200</span>
+<span class="normal">201</span>
+<span class="normal">202</span>
+<span class="normal">203</span>
+<span class="normal">204</span>
+<span class="normal">205</span>
+<span class="normal">206</span>
+<span class="normal">207</span>
+<span class="normal">208</span>
+<span class="normal">209</span>
+<span class="normal">210</span>
+<span class="normal">211</span>
+<span class="normal">212</span>
+<span class="normal">213</span>
+<span class="normal">214</span>
+<span class="normal">215</span>
+<span class="normal">216</span>
+<span class="normal">217</span>
+<span class="normal">218</span>
+<span class="normal">219</span>
+<span class="normal">220</span>
+<span class="normal">221</span>
+<span class="normal">222</span>
+<span class="normal">223</span>
+<span class="normal">224</span>
+<span class="normal">225</span>
+<span class="normal">226</span>
+<span class="normal">227</span>
+<span class="normal">228</span>
+<span class="normal">229</span>
+<span class="normal">230</span>
+<span class="normal">231</span>
+<span class="normal">232</span>
+<span class="normal">233</span>
+<span class="normal">234</span>
+<span class="normal">235</span>
+<span class="normal">236</span>
+<span class="normal">237</span>
+<span class="normal">238</span>
+<span class="normal">239</span>
+<span class="normal">240</span>
+<span class="normal">241</span>
+<span class="normal">242</span>
+<span class="normal">243</span>
+<span class="normal">244</span>
+<span class="normal">245</span>
+<span class="normal">246</span>
+<span class="normal">247</span>
+<span class="normal">248</span>
+<span class="normal">249</span>
+<span class="normal">250</span>
+<span class="normal">251</span>
+<span class="normal">252</span>
+<span class="normal">253</span>
+<span class="normal">254</span>
+<span class="normal">255</span>
+<span class="normal">256</span>
+<span class="normal">257</span>
+<span class="normal">258</span>
+<span class="normal">259</span>
+<span class="normal">260</span>
+<span class="normal">261</span>
+<span class="normal">262</span>
+<span class="normal">263</span>
+<span class="normal">264</span>
+<span class="normal">265</span>
+<span class="normal">266</span>
+<span class="normal">267</span>
+<span class="normal">268</span>
+<span class="normal">269</span>
+<span class="normal">270</span>
+<span class="normal">271</span>
+<span class="normal">272</span>
+<span class="normal">273</span>
+<span class="normal">274</span>
+<span class="normal">275</span>
+<span class="normal">276</span>
+<span class="normal">277</span>
+<span class="normal">278</span>
+<span class="normal">279</span>
+<span class="normal">280</span>
+<span class="normal">281</span>
+<span class="normal">282</span>
+<span class="normal">283</span>
+<span class="normal">284</span>
+<span class="normal">285</span>
+<span class="normal">286</span>
+<span class="normal">287</span>
+<span class="normal">288</span>
+<span class="normal">289</span>
+<span class="normal">290</span>
+<span class="normal">291</span>
+<span class="normal">292</span>
+<span class="normal">293</span>
+<span class="normal">294</span>
+<span class="normal">295</span>
+<span class="normal">296</span>
+<span class="normal">297</span>
+<span class="normal">298</span>
+<span class="normal">299</span>
+<span class="normal">300</span>
+<span class="normal">301</span>
+<span class="normal">302</span>
+<span class="normal">303</span>
+<span class="normal">304</span>
+<span class="normal">305</span>
+<span class="normal">306</span>
+<span class="normal">307</span>
+<span class="normal">308</span>
+<span class="normal">309</span>
+<span class="normal">310</span>
+<span class="normal">311</span>
+<span class="normal">312</span>
+<span class="normal">313</span>
+<span class="normal">314</span>
+<span class="normal">315</span>
+<span class="normal">316</span>
+<span class="normal">317</span>
+<span class="normal">318</span>
+<span class="normal">319</span>
+<span class="normal">320</span>
+<span class="normal">321</span>
+<span class="normal">322</span>
+<span class="normal">323</span>
+<span class="normal">324</span>
+<span class="normal">325</span>
+<span class="normal">326</span>
+<span class="normal">327</span>
+<span class="normal">328</span>
+<span class="normal">329</span>
+<span class="normal">330</span>
+<span class="normal">331</span>
+<span class="normal">332</span>
+<span class="normal">333</span>
+<span class="normal">334</span>
+<span class="normal">335</span>
+<span class="normal">336</span>
+<span class="normal">337</span>
+<span class="normal">338</span>
+<span class="normal">339</span>
+<span class="normal">340</span>
+<span class="normal">341</span>
+<span class="normal">342</span>
+<span class="normal">343</span>
+<span class="normal">344</span>
+<span class="normal">345</span>
+<span class="normal">346</span>
+<span class="normal">347</span>
+<span class="normal">348</span>
+<span class="normal">349</span>
+<span class="normal">350</span>
+<span class="normal">351</span>
+<span class="normal">352</span>
+<span class="normal">353</span>
+<span class="normal">354</span>
+<span class="normal">355</span>
+<span class="normal">356</span>
+<span class="normal">357</span>
+<span class="normal">358</span>
+<span class="normal">359</span>
+<span class="normal">360</span>
+<span class="normal">361</span>
+<span class="normal">362</span>
+<span class="normal">363</span>
+<span class="normal">364</span>
+<span class="normal">365</span>
+<span class="normal">366</span>
+<span class="normal">367</span>
+<span class="normal">368</span>
+<span class="normal">369</span>
+<span class="normal">370</span>
+<span class="normal">371</span>
+<span class="normal">372</span>
+<span class="normal">373</span>
+<span class="normal">374</span>
+<span class="normal">375</span>
+<span class="normal">376</span>
+<span class="normal">377</span>
+<span class="normal">378</span>
+<span class="normal">379</span>
+<span class="normal">380</span>
+<span class="normal">381</span>
+<span class="normal">382</span>
+<span class="normal">383</span>
+<span class="normal">384</span>
+<span class="normal">385</span>
+<span class="normal">386</span>
+<span class="normal">387</span>
+<span class="normal">388</span>
+<span class="normal">389</span>
+<span class="normal">390</span>
+<span class="normal">391</span>
+<span class="normal">392</span>
+<span class="normal">393</span>
+<span class="normal">394</span>
+<span class="normal">395</span>
+<span class="normal">396</span>
+<span class="normal">397</span>
+<span class="normal">398</span>
+<span class="normal">399</span>
+<span class="normal">400</span>
+<span class="normal">401</span>
+<span class="normal">402</span>
+<span class="normal">403</span>
+<span class="normal">404</span>
+<span class="normal">405</span>
+<span class="normal">406</span>
+<span class="normal">407</span>
+<span class="normal">408</span>
+<span class="normal">409</span>
+<span class="normal">410</span>
+<span class="normal">411</span>
+<span class="normal">412</span>
+<span class="normal">413</span>
+<span class="normal">414</span>
+<span class="normal">415</span>
+<span class="normal">416</span>
+<span class="normal">417</span>
+<span class="normal">418</span>
+<span class="normal">419</span>
+<span class="normal">420</span>
+<span class="normal">421</span>
+<span class="normal">422</span>
+<span class="normal">423</span>
+<span class="normal">424</span>
+<span class="normal">425</span>
+<span class="normal">426</span>
+<span class="normal">427</span>
+<span class="normal">428</span>
+<span class="normal">429</span>
+<span class="normal">430</span>
+<span class="normal">431</span>
+<span class="normal">432</span>
+<span class="normal">433</span>
+<span class="normal">434</span>
+<span class="normal">435</span>
+<span class="normal">436</span>
+<span class="normal">437</span>
+<span class="normal">438</span>
+<span class="normal">439</span>
+<span class="normal">440</span>
+<span class="normal">441</span>
+<span class="normal">442</span>
+<span class="normal">443</span>
+<span class="normal">444</span>
+<span class="normal">445</span>
+<span class="normal">446</span>
+<span class="normal">447</span>
+<span class="normal">448</span>
+<span class="normal">449</span>
+<span class="normal">450</span>
+<span class="normal">451</span>
+<span class="normal">452</span>
+<span class="normal">453</span>
+<span class="normal">454</span>
+<span class="normal">455</span>
+<span class="normal">456</span>
+<span class="normal">457</span>
+<span class="normal">458</span>
+<span class="normal">459</span>
+<span class="normal">460</span>
+<span class="normal">461</span>
+<span class="normal">462</span>
+<span class="normal">463</span>
+<span class="normal">464</span>
+<span class="normal">465</span>
+<span class="normal">466</span>
+<span class="normal">467</span>
+<span class="normal">468</span>
+<span class="normal">469</span>
+<span class="normal">470</span>
+<span class="normal">471</span>
+<span class="normal">472</span>
+<span class="normal">473</span>
+<span class="normal">474</span>
+<span class="normal">475</span>
+<span class="normal">476</span>
+<span class="normal">477</span>
+<span class="normal">478</span>
+<span class="normal">479</span>
+<span class="normal">480</span>
+<span class="normal">481</span>
+<span class="normal">482</span>
+<span class="normal">483</span>
+<span class="normal">484</span>
+<span class="normal">485</span>
+<span class="normal">486</span>
+<span class="normal">487</span>
+<span class="normal">488</span>
+<span class="normal">489</span>
+<span class="normal">490</span>
+<span class="normal">491</span>
+<span class="normal">492</span>
+<span class="normal">493</span>
+<span class="normal">494</span>
+<span class="normal">495</span>
+<span class="normal">496</span>
+<span class="normal">497</span>
+<span class="normal">498</span>
+<span class="normal">499</span>
+<span class="normal">500</span>
+<span class="normal">501</span>
+<span class="normal">502</span>
+<span class="normal">503</span>
+<span class="normal">504</span>
+<span class="normal">505</span>
+<span class="normal">506</span>
+<span class="normal">507</span>
+<span class="normal">508</span>
+<span class="normal">509</span>
+<span class="normal">510</span>
+<span class="normal">511</span>
+<span class="normal">512</span>
+<span class="normal">513</span>
+<span class="normal">514</span>
+<span class="normal">515</span>
+<span class="normal">516</span>
+<span class="normal">517</span>
+<span class="normal">518</span>
+<span class="normal">519</span>
+<span class="normal">520</span>
+<span class="normal">521</span>
+<span class="normal">522</span>
+<span class="normal">523</span>
+<span class="normal">524</span>
+<span class="normal">525</span>
+<span class="normal">526</span>
+<span class="normal">527</span>
+<span class="normal">528</span>
+<span class="normal">529</span>
+<span class="normal">530</span>
+<span class="normal">531</span>
+<span class="normal">532</span>
+<span class="normal">533</span>
+<span class="normal">534</span>
+<span class="normal">535</span>
+<span class="normal">536</span></pre></div></td><td class="code"><div><pre><span></span><span class="c1"># ==============================================================================</span>
+<span class="c1"># PROJECT: GRADELA - GRADient Evaluation &amp; Learned Academic Performance Radar</span>
+<span class="c1"># End-to-End Analysis, Predictive Modeling, and Evaluation Pipeline</span>
+<span class="c1"># Investigators: Aishi De (23070521008) &amp; Parthiv Abhani (23070521106)</span>
+<span class="c1"># Subject: Business Intelligence (Semester 7)</span>
+<span class="c1"># Faculty Guide: Dr. Snehlata Wankhade</span>
+<span class="c1"># Runtime: R (CRAN / Tidyverse / Caret / RandomForest / GBM)</span>
+<span class="c1"># ==============================================================================</span>
+
+<span class="c1"># --- Cell 5: Executed Pipeline Block ---</span>
+<span class="n">required_packages</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="nf">c</span><span class="p">(</span>
+<span class="w">  </span><span class="s">"tidyverse"</span><span class="p">,</span><span class="w"> </span><span class="s">"caret"</span><span class="p">,</span><span class="w"> </span><span class="s">"randomForest"</span><span class="p">,</span><span class="w"> </span><span class="s">"gbm"</span><span class="p">,</span>
+<span class="w">  </span><span class="s">"pROC"</span><span class="p">,</span><span class="w"> </span><span class="s">"corrplot"</span><span class="p">,</span><span class="w"> </span><span class="s">"rpart"</span><span class="p">,</span><span class="w"> </span><span class="s">"rpart.plot"</span><span class="p">,</span><span class="w"> </span><span class="s">"e1071"</span>
+<span class="p">)</span>
+
+<span class="n">installed</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="nf">installed.packages</span><span class="p">()[,</span><span class="w"> </span><span class="s">"Package"</span><span class="p">]</span>
+<span class="n">missing_packages</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="n">required_packages</span><span class="p">[</span><span class="o">!</span><span class="n">required_packages</span><span class="w"> </span><span class="o">%in%</span><span class="w"> </span><span class="n">installed</span><span class="p">]</span>
+
+<span class="kr">if</span><span class="w"> </span><span class="p">(</span><span class="nf">length</span><span class="p">(</span><span class="n">missing_packages</span><span class="p">)</span><span class="w"> </span><span class="o">&gt;</span><span class="w"> </span><span class="m">0</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="nf">cat</span><span class="p">(</span><span class="s">"Installing required packages...\n"</span><span class="p">)</span>
+<span class="w">  </span><span class="nf">install.packages</span><span class="p">(</span><span class="n">missing_packages</span><span class="p">,</span><span class="w"> </span><span class="n">repos</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">"https://cloud.r-project.org"</span><span class="p">)</span>
+<span class="p">}</span>
+
+<span class="nf">suppressPackageStartupMessages</span><span class="p">({</span>
+<span class="w">  </span><span class="nf">library</span><span class="p">(</span><span class="n">tidyverse</span><span class="p">)</span>
+<span class="w">  </span><span class="nf">library</span><span class="p">(</span><span class="n">caret</span><span class="p">)</span>
+<span class="w">  </span><span class="nf">library</span><span class="p">(</span><span class="n">randomForest</span><span class="p">)</span>
+<span class="w">  </span><span class="nf">library</span><span class="p">(</span><span class="n">gbm</span><span class="p">)</span>
+<span class="w">  </span><span class="nf">library</span><span class="p">(</span><span class="n">pROC</span><span class="p">)</span>
+<span class="w">  </span><span class="nf">library</span><span class="p">(</span><span class="n">corrplot</span><span class="p">)</span>
+<span class="w">  </span><span class="nf">library</span><span class="p">(</span><span class="n">rpart</span><span class="p">)</span>
+<span class="w">  </span><span class="nf">library</span><span class="p">(</span><span class="n">rpart.plot</span><span class="p">)</span>
+<span class="w">  </span><span class="nf">library</span><span class="p">(</span><span class="n">e1071</span><span class="p">)</span>
+<span class="p">})</span>
+
+
+<span class="n">file_name</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="s">"Student_Performance_Factors_Dataset.csv"</span>
+<span class="kr">if</span><span class="w"> </span><span class="p">(</span><span class="o">!</span><span class="nf">file.exists</span><span class="p">(</span><span class="n">file_name</span><span class="p">))</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="nf">stop</span><span class="p">(</span><span class="s">"Dataset file not found!"</span><span class="p">)</span>
+<span class="p">}</span>
+
+<span class="nf">cat</span><span class="p">(</span><span class="nf">sprintf</span><span class="p">(</span><span class="s">"SUCCESS!! : '%s'\n"</span><span class="p">,</span><span class="w"> </span><span class="n">file_name</span><span class="p">))</span>
+<span class="n">df_raw</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="nf">read.csv</span><span class="p">(</span><span class="n">file_name</span><span class="p">,</span><span class="w"> </span><span class="n">stringsAsFactors</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">FALSE</span><span class="p">)</span>
+<span class="nf">cat</span><span class="p">(</span><span class="nf">sprintf</span><span class="p">(</span><span class="s">"Loaded dataset: %d rows, %d columns.\n\n"</span><span class="p">,</span><span class="w"> </span><span class="nf">nrow</span><span class="p">(</span><span class="n">df_raw</span><span class="p">),</span><span class="w"> </span><span class="nf">ncol</span><span class="p">(</span><span class="n">df_raw</span><span class="p">)))</span>
+
+
+<span class="nf">names</span><span class="p">(</span><span class="n">df_raw</span><span class="p">)</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="nf">tolower</span><span class="p">(</span><span class="nf">gsub</span><span class="p">(</span><span class="s">"[ .]"</span><span class="p">,</span><span class="w"> </span><span class="s">"_"</span><span class="p">,</span><span class="w"> </span><span class="nf">names</span><span class="p">(</span><span class="n">df_raw</span><span class="p">)))</span>
+
+<span class="n">target_col</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="nf">grep</span><span class="p">(</span><span class="s">"exam_score"</span><span class="p">,</span><span class="w"> </span><span class="nf">names</span><span class="p">(</span><span class="n">df_raw</span><span class="p">),</span><span class="w"> </span><span class="n">value</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">TRUE</span><span class="p">)</span>
+<span class="kr">if</span><span class="w"> </span><span class="p">(</span><span class="nf">length</span><span class="p">(</span><span class="n">target_col</span><span class="p">)</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="m">0</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="n">target_col</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="nf">names</span><span class="p">(</span><span class="n">df_raw</span><span class="p">)[</span><span class="nf">ncol</span><span class="p">(</span><span class="n">df_raw</span><span class="p">)]</span>
+<span class="p">}</span>
+<span class="nf">cat</span><span class="p">(</span><span class="nf">sprintf</span><span class="p">(</span><span class="s">"Target column: '%s'\n"</span><span class="p">,</span><span class="w"> </span><span class="n">target_col</span><span class="p">))</span>
+
+<span class="n">df_clean</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="n">df_raw</span><span class="w"> </span><span class="o">%&gt;%</span>
+<span class="w">  </span><span class="nf">mutate</span><span class="p">(</span><span class="nf">across</span><span class="p">(</span><span class="nf">where</span><span class="p">(</span><span class="n">is.numeric</span><span class="p">),</span><span class="w"> </span><span class="o">~</span><span class="w"> </span><span class="nf">ifelse</span><span class="p">(</span><span class="nf">is.na</span><span class="p">(</span><span class="n">.</span><span class="p">),</span><span class="w"> </span><span class="nf">median</span><span class="p">(</span><span class="n">.</span><span class="p">,</span><span class="w"> </span><span class="n">na.rm</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">TRUE</span><span class="p">),</span><span class="w"> </span><span class="n">.</span><span class="p">)))</span><span class="w"> </span><span class="o">%&gt;%</span>
+<span class="w">  </span><span class="nf">mutate</span><span class="p">(</span><span class="nf">across</span><span class="p">(</span><span class="nf">where</span><span class="p">(</span><span class="n">is.character</span><span class="p">),</span><span class="w"> </span><span class="o">~</span><span class="w"> </span><span class="nf">ifelse</span><span class="p">(</span><span class="nf">is.na</span><span class="p">(</span><span class="n">.</span><span class="p">)</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="nf">trimws</span><span class="p">(</span><span class="n">.</span><span class="p">)</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="s">""</span><span class="p">,</span><span class="w"> </span><span class="s">"Unknown"</span><span class="p">,</span><span class="w"> </span><span class="nf">trimws</span><span class="p">(</span><span class="n">.</span><span class="p">))))</span><span class="w"> </span><span class="o">%&gt;%</span>
+<span class="w">  </span><span class="nf">mutate</span><span class="p">(</span><span class="nf">across</span><span class="p">(</span><span class="nf">where</span><span class="p">(</span><span class="n">is.character</span><span class="p">),</span><span class="w"> </span><span class="n">as.factor</span><span class="p">))</span>
+
+
+<span class="n">risk_threshold</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="nf">as.numeric</span><span class="p">(</span><span class="nf">quantile</span><span class="p">(</span><span class="n">df_clean</span><span class="p">[[</span><span class="n">target_col</span><span class="p">]],</span><span class="w"> </span><span class="m">0.25</span><span class="p">,</span><span class="w"> </span><span class="n">na.rm</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">TRUE</span><span class="p">))</span>
+<span class="nf">cat</span><span class="p">(</span><span class="nf">sprintf</span><span class="p">(</span><span class="s">"Intervention Score Threshold (&lt;= 25th percentile): %.2f\n"</span><span class="p">,</span><span class="w"> </span><span class="n">risk_threshold</span><span class="p">))</span>
+
+<span class="n">df_model</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="n">df_clean</span><span class="w"> </span><span class="o">%&gt;%</span>
+<span class="w">  </span><span class="nf">mutate</span><span class="p">(</span>
+<span class="w">    </span><span class="n">risk_status</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">factor</span><span class="p">(</span>
+<span class="w">      </span><span class="nf">ifelse</span><span class="p">(</span><span class="n">.data</span><span class="p">[[</span><span class="n">target_col</span><span class="p">]]</span><span class="w"> </span><span class="o">&lt;=</span><span class="w"> </span><span class="n">risk_threshold</span><span class="p">,</span><span class="w"> </span><span class="s">"High_Risk"</span><span class="p">,</span><span class="w"> </span><span class="s">"Normal"</span><span class="p">),</span>
+<span class="w">      </span><span class="n">levels</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">c</span><span class="p">(</span><span class="s">"High_Risk"</span><span class="p">,</span><span class="w"> </span><span class="s">"Normal"</span><span class="p">)</span>
+<span class="w">    </span><span class="p">)</span>
+<span class="w">  </span><span class="p">)</span>
+
+<span class="nf">cat</span><span class="p">(</span><span class="s">"Class Balance:\n"</span><span class="p">)</span>
+<span class="nf">print</span><span class="p">(</span><span class="nf">table</span><span class="p">(</span><span class="n">df_model</span><span class="o">$</span><span class="n">risk_status</span><span class="p">))</span>
+
+
+<span class="n">num_cols</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="n">df_model</span><span class="w"> </span><span class="o">%&gt;%</span><span class="w"> </span><span class="nf">select</span><span class="p">(</span><span class="nf">where</span><span class="p">(</span><span class="n">is.numeric</span><span class="p">))</span>
+<span class="kr">if</span><span class="w"> </span><span class="p">(</span><span class="nf">ncol</span><span class="p">(</span><span class="n">num_cols</span><span class="p">)</span><span class="w"> </span><span class="o">&gt;</span><span class="w"> </span><span class="m">1</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="n">cor_mat</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="nf">cor</span><span class="p">(</span><span class="n">num_cols</span><span class="p">,</span><span class="w"> </span><span class="n">use</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">"complete.obs"</span><span class="p">)</span>
+<span class="w">  </span><span class="nf">corrplot</span><span class="p">(</span>
+<span class="w">    </span><span class="n">cor_mat</span><span class="p">,</span><span class="w"> </span><span class="n">method</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">"color"</span><span class="p">,</span><span class="w"> </span><span class="n">type</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">"upper"</span><span class="p">,</span>
+<span class="w">    </span><span class="n">tl.col</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">"black"</span><span class="p">,</span><span class="w"> </span><span class="n">tl.srt</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">45</span><span class="p">,</span><span class="w"> </span><span class="n">addCoef.col</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">"black"</span><span class="p">,</span>
+<span class="w">    </span><span class="n">number.cex</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">0.65</span><span class="p">,</span><span class="w"> </span><span class="n">title</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">"GRADELA: Feature Correlation Matrix"</span><span class="p">,</span>
+<span class="w">    </span><span class="n">mar</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">c</span><span class="p">(</span><span class="m">0</span><span class="p">,</span><span class="w"> </span><span class="m">0</span><span class="p">,</span><span class="w"> </span><span class="m">1.5</span><span class="p">,</span><span class="w"> </span><span class="m">0</span><span class="p">)</span>
+<span class="w">  </span><span class="p">)</span>
+<span class="p">}</span>
+
+<span class="c1"># Train/Test Split (80/20)</span>
+<span class="nf">set.seed</span><span class="p">(</span><span class="m">42</span><span class="p">)</span>
+<span class="n">train_idx</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="nf">createDataPartition</span><span class="p">(</span><span class="n">df_model</span><span class="o">$</span><span class="n">risk_status</span><span class="p">,</span><span class="w"> </span><span class="n">p</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">0.80</span><span class="p">,</span><span class="w"> </span><span class="n">list</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">FALSE</span><span class="p">)</span>
+
+<span class="n">features</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="n">df_model</span><span class="w"> </span><span class="o">%&gt;%</span><span class="w"> </span><span class="nf">select</span><span class="p">(</span><span class="o">-</span><span class="nf">all_of</span><span class="p">(</span><span class="nf">c</span><span class="p">(</span><span class="n">target_col</span><span class="p">,</span><span class="w"> </span><span class="s">"risk_status"</span><span class="p">)))</span>
+
+<span class="n">train_data</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="n">features</span><span class="p">[</span><span class="n">train_idx</span><span class="p">,</span><span class="w"> </span><span class="p">]</span>
+<span class="n">train_data</span><span class="o">$</span><span class="n">risk_status</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="n">df_model</span><span class="o">$</span><span class="n">risk_status</span><span class="p">[</span><span class="n">train_idx</span><span class="p">]</span>
+
+<span class="n">test_data</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="n">features</span><span class="p">[</span><span class="o">-</span><span class="n">train_idx</span><span class="p">,</span><span class="w"> </span><span class="p">]</span>
+<span class="n">test_labels</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="n">df_model</span><span class="o">$</span><span class="n">risk_status</span><span class="p">[</span><span class="o">-</span><span class="n">train_idx</span><span class="p">]</span>
+
+<span class="c1"># Model Training (5-Fold CV)</span>
+<span class="n">cv_control</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="nf">trainControl</span><span class="p">(</span>
+<span class="w">  </span><span class="n">method</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">"cv"</span><span class="p">,</span><span class="w"> </span><span class="n">number</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">5</span><span class="p">,</span>
+<span class="w">  </span><span class="n">classProbs</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">TRUE</span><span class="p">,</span>
+<span class="w">  </span><span class="n">summaryFunction</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">twoClassSummary</span><span class="p">,</span>
+<span class="w">  </span><span class="n">savePredictions</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">"final"</span>
+<span class="p">)</span>
+
+<span class="nf">cat</span><span class="p">(</span><span class="s">"\n&gt;&gt;&gt; Training Logistic Regression...\n"</span><span class="p">)</span>
+<span class="n">fit_glm</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="nf">suppressWarnings</span><span class="p">(</span>
+<span class="w">  </span><span class="nf">train</span><span class="p">(</span><span class="n">risk_status</span><span class="w"> </span><span class="o">~</span><span class="w"> </span><span class="n">.</span><span class="p">,</span><span class="w"> </span><span class="n">data</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">train_data</span><span class="p">,</span><span class="w"> </span><span class="n">method</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">"glm"</span><span class="p">,</span><span class="w"> </span><span class="n">family</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">"binomial"</span><span class="p">,</span><span class="w"> </span><span class="n">metric</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">"ROC"</span><span class="p">,</span><span class="w"> </span><span class="n">trControl</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">cv_control</span><span class="p">)</span>
+<span class="p">)</span>
+
+<span class="nf">cat</span><span class="p">(</span><span class="s">"&gt;&gt;&gt; Training Random Forest Classifier...\n"</span><span class="p">)</span>
+<span class="n">fit_rf</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="nf">train</span><span class="p">(</span><span class="n">risk_status</span><span class="w"> </span><span class="o">~</span><span class="w"> </span><span class="n">.</span><span class="p">,</span><span class="w"> </span><span class="n">data</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">train_data</span><span class="p">,</span><span class="w"> </span><span class="n">method</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">"rf"</span><span class="p">,</span><span class="w"> </span><span class="n">ntree</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">100</span><span class="p">,</span><span class="w"> </span><span class="n">metric</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">"ROC"</span><span class="p">,</span><span class="w"> </span><span class="n">trControl</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">cv_control</span><span class="p">)</span>
+
+<span class="nf">cat</span><span class="p">(</span><span class="s">"&gt;&gt;&gt; Training Gradient Boosting Machine (GBM)...\n"</span><span class="p">)</span>
+<span class="n">fit_gbm</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="nf">train</span><span class="p">(</span>
+<span class="w">  </span><span class="n">risk_status</span><span class="w"> </span><span class="o">~</span><span class="w"> </span><span class="n">.</span><span class="p">,</span><span class="w"> </span><span class="n">data</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">train_data</span><span class="p">,</span><span class="w"> </span><span class="n">method</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">"gbm"</span><span class="p">,</span>
+<span class="w">  </span><span class="n">metric</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">"ROC"</span><span class="p">,</span><span class="w"> </span><span class="n">trControl</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">cv_control</span><span class="p">,</span>
+<span class="w">  </span><span class="n">verbose</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">FALSE</span><span class="p">,</span><span class="w"> </span><span class="n">tuneLength</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">2</span>
+<span class="p">)</span>
+
+<span class="c1"># Model Evaluation &amp; ROC Comparison</span>
+<span class="n">pred_rf</span><span class="w">  </span><span class="o">&lt;-</span><span class="w"> </span><span class="nf">predict</span><span class="p">(</span><span class="n">fit_rf</span><span class="p">,</span><span class="w"> </span><span class="n">test_data</span><span class="p">)</span>
+<span class="n">prob_rf</span><span class="w">  </span><span class="o">&lt;-</span><span class="w"> </span><span class="nf">predict</span><span class="p">(</span><span class="n">fit_rf</span><span class="p">,</span><span class="w"> </span><span class="n">test_data</span><span class="p">,</span><span class="w"> </span><span class="n">type</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">"prob"</span><span class="p">)</span><span class="o">$</span><span class="n">High_Risk</span>
+
+<span class="n">pred_gbm</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="nf">predict</span><span class="p">(</span><span class="n">fit_gbm</span><span class="p">,</span><span class="w"> </span><span class="n">test_data</span><span class="p">)</span>
+<span class="n">prob_gbm</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="nf">predict</span><span class="p">(</span><span class="n">fit_gbm</span><span class="p">,</span><span class="w"> </span><span class="n">test_data</span><span class="p">,</span><span class="w"> </span><span class="n">type</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">"prob"</span><span class="p">)</span><span class="o">$</span><span class="n">High_Risk</span>
+
+<span class="n">pred_glm</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="nf">predict</span><span class="p">(</span><span class="n">fit_glm</span><span class="p">,</span><span class="w"> </span><span class="n">test_data</span><span class="p">)</span>
+<span class="n">prob_glm</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="nf">predict</span><span class="p">(</span><span class="n">fit_glm</span><span class="p">,</span><span class="w"> </span><span class="n">test_data</span><span class="p">,</span><span class="w"> </span><span class="n">type</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">"prob"</span><span class="p">)</span><span class="o">$</span><span class="n">High_Risk</span>
+
+<span class="nf">cat</span><span class="p">(</span><span class="s">"\n======================================================\n"</span><span class="p">)</span>
+<span class="nf">cat</span><span class="p">(</span><span class="s">"          RANDOM FOREST CLASSIFICATION METRICS         \n"</span><span class="p">)</span>
+<span class="nf">cat</span><span class="p">(</span><span class="s">"======================================================\n"</span><span class="p">)</span>
+<span class="nf">print</span><span class="p">(</span><span class="nf">confusionMatrix</span><span class="p">(</span><span class="n">pred_rf</span><span class="p">,</span><span class="w"> </span><span class="n">test_labels</span><span class="p">,</span><span class="w"> </span><span class="n">positive</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">"High_Risk"</span><span class="p">))</span>
+
+<span class="c1"># Generate ROC Curves</span>
+<span class="n">roc_rf</span><span class="w">  </span><span class="o">&lt;-</span><span class="w"> </span><span class="nf">roc</span><span class="p">(</span><span class="n">test_labels</span><span class="p">,</span><span class="w"> </span><span class="n">prob_rf</span><span class="p">,</span><span class="w"> </span><span class="n">levels</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">c</span><span class="p">(</span><span class="s">"Normal"</span><span class="p">,</span><span class="w"> </span><span class="s">"High_Risk"</span><span class="p">))</span>
+<span class="n">roc_gbm</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="nf">roc</span><span class="p">(</span><span class="n">test_labels</span><span class="p">,</span><span class="w"> </span><span class="n">prob_gbm</span><span class="p">,</span><span class="w"> </span><span class="n">levels</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">c</span><span class="p">(</span><span class="s">"Normal"</span><span class="p">,</span><span class="w"> </span><span class="s">"High_Risk"</span><span class="p">))</span>
+<span class="n">roc_glm</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="nf">roc</span><span class="p">(</span><span class="n">test_labels</span><span class="p">,</span><span class="w"> </span><span class="n">prob_glm</span><span class="p">,</span><span class="w"> </span><span class="n">levels</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">c</span><span class="p">(</span><span class="s">"Normal"</span><span class="p">,</span><span class="w"> </span><span class="s">"High_Risk"</span><span class="p">))</span>
+
+<span class="nf">plot</span><span class="p">(</span><span class="n">roc_rf</span><span class="p">,</span><span class="w"> </span><span class="n">col</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">"#2C3E50"</span><span class="p">,</span><span class="w"> </span><span class="n">lwd</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">2.5</span><span class="p">,</span><span class="w"> </span><span class="n">main</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">"GRADELA: Early Warning ROC Comparison"</span><span class="p">)</span>
+<span class="nf">lines</span><span class="p">(</span><span class="n">roc_gbm</span><span class="p">,</span><span class="w"> </span><span class="n">col</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">"#E74C3C"</span><span class="p">,</span><span class="w"> </span><span class="n">lwd</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">2</span><span class="p">)</span>
+<span class="nf">lines</span><span class="p">(</span><span class="n">roc_glm</span><span class="p">,</span><span class="w"> </span><span class="n">col</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">"#16A085"</span><span class="p">,</span><span class="w"> </span><span class="n">lwd</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">2</span><span class="p">)</span>
+<span class="nf">legend</span><span class="p">(</span><span class="s">"bottomright"</span><span class="p">,</span><span class="w"> </span><span class="n">legend</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">c</span><span class="p">(</span>
+<span class="w">  </span><span class="nf">sprintf</span><span class="p">(</span><span class="s">"Random Forest (AUC = %.3f)"</span><span class="p">,</span><span class="w"> </span><span class="nf">auc</span><span class="p">(</span><span class="n">roc_rf</span><span class="p">)),</span>
+<span class="w">  </span><span class="nf">sprintf</span><span class="p">(</span><span class="s">"Gradient Boosting (AUC = %.3f)"</span><span class="p">,</span><span class="w"> </span><span class="nf">auc</span><span class="p">(</span><span class="n">roc_gbm</span><span class="p">)),</span>
+<span class="w">  </span><span class="nf">sprintf</span><span class="p">(</span><span class="s">"Logistic Regression (AUC = %.3f)"</span><span class="p">,</span><span class="w"> </span><span class="nf">auc</span><span class="p">(</span><span class="n">roc_glm</span><span class="p">))</span>
+<span class="p">),</span><span class="w"> </span><span class="n">col</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">c</span><span class="p">(</span><span class="s">"#2C3E50"</span><span class="p">,</span><span class="w"> </span><span class="s">"#E74C3C"</span><span class="p">,</span><span class="w"> </span><span class="s">"#16A085"</span><span class="p">),</span><span class="w"> </span><span class="n">lwd</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">2.5</span><span class="p">,</span><span class="w"> </span><span class="n">bty</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">"n"</span><span class="p">)</span>
+
+<span class="c1"># Variable Importance Plot</span>
+<span class="n">rf_imp</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="nf">varImp</span><span class="p">(</span><span class="n">fit_rf</span><span class="p">)</span><span class="o">$</span><span class="n">importance</span>
+<span class="n">rf_imp</span><span class="o">$</span><span class="n">Feature</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="nf">rownames</span><span class="p">(</span><span class="n">rf_imp</span><span class="p">)</span>
+
+<span class="n">p_imp</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="nf">ggplot</span><span class="p">(</span><span class="nf">head</span><span class="p">(</span><span class="n">rf_imp</span><span class="w"> </span><span class="o">%&gt;%</span><span class="w"> </span><span class="nf">arrange</span><span class="p">(</span><span class="nf">desc</span><span class="p">(</span><span class="n">Overall</span><span class="p">)),</span><span class="w"> </span><span class="m">10</span><span class="p">),</span><span class="w"> </span><span class="nf">aes</span><span class="p">(</span><span class="n">x</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">reorder</span><span class="p">(</span><span class="n">Feature</span><span class="p">,</span><span class="w"> </span><span class="n">Overall</span><span class="p">),</span><span class="w"> </span><span class="n">y</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">Overall</span><span class="p">))</span><span class="w"> </span><span class="o">+</span>
+<span class="w">  </span><span class="nf">geom_bar</span><span class="p">(</span><span class="n">stat</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">"identity"</span><span class="p">,</span><span class="w"> </span><span class="n">fill</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">"#34495E"</span><span class="p">)</span><span class="w"> </span><span class="o">+</span>
+<span class="w">  </span><span class="nf">coord_flip</span><span class="p">()</span><span class="w"> </span><span class="o">+</span>
+<span class="w">  </span><span class="nf">theme_minimal</span><span class="p">()</span><span class="w"> </span><span class="o">+</span>
+<span class="w">  </span><span class="nf">labs</span><span class="p">(</span>
+<span class="w">    </span><span class="n">title</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">"GRADELA: Top Indicators Influencing Academic Risk"</span><span class="p">,</span>
+<span class="w">    </span><span class="n">x</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">"Indicator"</span><span class="p">,</span><span class="w"> </span><span class="n">y</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">"Relative Importance"</span>
+<span class="w">  </span><span class="p">)</span>
+<span class="nf">print</span><span class="p">(</span><span class="n">p_imp</span><span class="p">)</span>
+
+<span class="c1"># Decision Tree for Classroom Intervention Rules</span>
+<span class="n">tree_fit</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="nf">rpart</span><span class="p">(</span><span class="n">risk_status</span><span class="w"> </span><span class="o">~</span><span class="w"> </span><span class="n">.</span><span class="p">,</span><span class="w"> </span><span class="n">data</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">train_data</span><span class="p">,</span><span class="w"> </span><span class="n">method</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">"class"</span><span class="p">,</span><span class="w"> </span><span class="n">control</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">rpart.control</span><span class="p">(</span><span class="n">cp</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">0.015</span><span class="p">))</span>
+<span class="nf">rpart.plot</span><span class="p">(</span>
+<span class="w">  </span><span class="n">tree_fit</span><span class="p">,</span><span class="w"> </span><span class="n">type</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">2</span><span class="p">,</span><span class="w"> </span><span class="n">extra</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">104</span><span class="p">,</span><span class="w"> </span><span class="n">under</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">TRUE</span><span class="p">,</span>
+<span class="w">  </span><span class="n">box.palette</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">"RdYlGn"</span><span class="p">,</span>
+<span class="w">  </span><span class="n">main</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">"GRADELA: Early Intervention Decision Tree"</span>
+<span class="p">)</span>
+
+<span class="nf">cat</span><span class="p">(</span><span class="s">"\n&gt;&gt;&gt; Pipeline execution completed successfully.\n"</span><span class="p">)</span>
+<span class="nf">cat</span><span class="p">(</span><span class="s">"Aishi De &amp; Parthiv Abhani"</span><span class="p">)</span>
+
+<span class="c1"># --- Cell 6: Executed Pipeline Block ---</span>
+<span class="c1"># EARLY INTERVENTION TRIAGE &amp; SCORE REGRESSION MODELING</span>
+
+<span class="c1"># 1. ACTIONABLE INTERVENTION TRIAGE ROSTER (FOR EDUCATORS)</span>
+<span class="nf">cat</span><span class="p">(</span><span class="s">"&gt;&gt;&gt; [1/3] Generating Educator Early Intervention Triage Roster...\n"</span><span class="p">)</span>
+
+<span class="c1"># Combine test data features with predicted risk probabilities</span>
+<span class="n">triage_df</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="n">test_data</span><span class="w"> </span><span class="o">%&gt;%</span>
+<span class="w">  </span><span class="nf">mutate</span><span class="p">(</span>
+<span class="w">    </span><span class="n">actual_status</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">test_labels</span><span class="p">,</span>
+<span class="w">    </span><span class="n">predicted_status</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">pred_rf</span><span class="p">,</span>
+<span class="w">    </span><span class="n">risk_probability</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">round</span><span class="p">(</span><span class="n">prob_rf</span><span class="p">,</span><span class="w"> </span><span class="m">4</span><span class="p">),</span>
+<span class="w">    </span><span class="n">intervention_priority</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">case_when</span><span class="p">(</span>
+<span class="w">      </span><span class="n">risk_probability</span><span class="w"> </span><span class="o">&gt;=</span><span class="w"> </span><span class="m">0.75</span><span class="w"> </span><span class="o">~</span><span class="w"> </span><span class="s">"Critical (Immediate Action)"</span><span class="p">,</span>
+<span class="w">      </span><span class="n">risk_probability</span><span class="w"> </span><span class="o">&gt;=</span><span class="w"> </span><span class="m">0.50</span><span class="w"> </span><span class="o">~</span><span class="w"> </span><span class="s">"High Priority"</span><span class="p">,</span>
+<span class="w">      </span><span class="n">risk_probability</span><span class="w"> </span><span class="o">&gt;=</span><span class="w"> </span><span class="m">0.25</span><span class="w"> </span><span class="o">~</span><span class="w"> </span><span class="s">"Moderate Watchlist"</span><span class="p">,</span>
+<span class="w">      </span><span class="kc">TRUE</span><span class="w"> </span><span class="o">~</span><span class="w"> </span><span class="s">"Low / On-Track"</span>
+<span class="w">    </span><span class="p">)</span>
+<span class="w">  </span><span class="p">)</span>
+
+<span class="c1"># Extract top high-risk candidates needing intervention</span>
+<span class="n">action_roster</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="n">triage_df</span><span class="w"> </span><span class="o">%&gt;%</span>
+<span class="w">  </span><span class="nf">filter</span><span class="p">(</span><span class="n">predicted_status</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="s">"High_Risk"</span><span class="p">)</span><span class="w"> </span><span class="o">%&gt;%</span>
+<span class="w">  </span><span class="nf">arrange</span><span class="p">(</span><span class="nf">desc</span><span class="p">(</span><span class="n">risk_probability</span><span class="p">))</span>
+
+<span class="nf">cat</span><span class="p">(</span><span class="nf">sprintf</span><span class="p">(</span><span class="s">"Identified %d students flagged for intervention in the validation cohort.\n"</span><span class="p">,</span><span class="w"> </span><span class="nf">nrow</span><span class="p">(</span><span class="n">action_roster</span><span class="p">)))</span>
+<span class="nf">cat</span><span class="p">(</span><span class="s">"\nTop 5 Highest-Risk Students Identified by GRADELA:\n"</span><span class="p">)</span>
+
+<span class="c1"># Use any_of() so missing feature names won't crash the script</span>
+<span class="n">display_cols</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="nf">c</span><span class="p">(</span><span class="s">"risk_probability"</span><span class="p">,</span><span class="w"> </span><span class="s">"intervention_priority"</span><span class="p">,</span><span class="w"> </span><span class="s">"actual_status"</span><span class="p">,</span>
+<span class="w">                  </span><span class="s">"hours_studied"</span><span class="p">,</span><span class="w"> </span><span class="s">"attendance"</span><span class="p">,</span><span class="w"> </span><span class="s">"tutoring_sessions"</span><span class="p">)</span>
+<span class="nf">print</span><span class="p">(</span><span class="nf">head</span><span class="p">(</span><span class="n">action_roster</span><span class="w"> </span><span class="o">%&gt;%</span><span class="w"> </span><span class="nf">select</span><span class="p">(</span><span class="nf">any_of</span><span class="p">(</span><span class="n">display_cols</span><span class="p">)),</span><span class="w"> </span><span class="m">5</span><span class="p">))</span>
+
+<span class="c1"># Export clean intervention CSV for school counselors/teachers</span>
+<span class="nf">write.csv</span><span class="p">(</span><span class="n">action_roster</span><span class="p">,</span><span class="w"> </span><span class="s">"gradela_intervention_roster.csv"</span><span class="p">,</span><span class="w"> </span><span class="n">row.names</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">FALSE</span><span class="p">)</span>
+<span class="nf">cat</span><span class="p">(</span><span class="s">"\n[SAVED] Intervention roster exported to 'gradela_intervention_roster.csv'.\n\n"</span><span class="p">)</span>
+
+
+<span class="c1"># 2. CONTINUOUS EXAM SCORE REGRESSION (PREDICTING EXACT MARKS)</span>
+
+<span class="nf">cat</span><span class="p">(</span><span class="s">"&gt;&gt;&gt; [2/3] Training Continuous Score Predictor (Random Forest Regressor)...\n"</span><span class="p">)</span>
+
+<span class="n">y_train_score</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="n">df_clean</span><span class="p">[[</span><span class="n">target_col</span><span class="p">]][</span><span class="n">train_idx</span><span class="p">]</span>
+<span class="n">y_test_score</span><span class="w">  </span><span class="o">&lt;-</span><span class="w"> </span><span class="n">df_clean</span><span class="p">[[</span><span class="n">target_col</span><span class="p">]][</span><span class="o">-</span><span class="n">train_idx</span><span class="p">]</span>
+
+<span class="n">reg_train_data</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="n">features</span><span class="p">[</span><span class="n">train_idx</span><span class="p">,</span><span class="w"> </span><span class="p">]</span>
+<span class="n">reg_train_data</span><span class="o">$</span><span class="n">exam_score</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="n">y_train_score</span>
+
+<span class="c1"># Fit Random Forest Regressor</span>
+<span class="n">fit_reg_rf</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="nf">randomForest</span><span class="p">(</span>
+<span class="w">  </span><span class="n">exam_score</span><span class="w"> </span><span class="o">~</span><span class="w"> </span><span class="n">.</span><span class="p">,</span>
+<span class="w">  </span><span class="n">data</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">reg_train_data</span><span class="p">,</span>
+<span class="w">  </span><span class="n">ntree</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">120</span><span class="p">,</span>
+<span class="w">  </span><span class="n">importance</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">TRUE</span>
+<span class="p">)</span>
+
+<span class="c1"># Predict continuous exam scores on unseen test data</span>
+<span class="n">score_preds</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="nf">predict</span><span class="p">(</span><span class="n">fit_reg_rf</span><span class="p">,</span><span class="w"> </span><span class="n">test_data</span><span class="p">)</span>
+
+<span class="c1"># Compute Regression Metrics directly in base R</span>
+<span class="n">reg_rmse</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="nf">sqrt</span><span class="p">(</span><span class="nf">mean</span><span class="p">((</span><span class="n">y_test_score</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">score_preds</span><span class="p">)</span><span class="o">^</span><span class="m">2</span><span class="p">))</span>
+<span class="n">reg_mae</span><span class="w">  </span><span class="o">&lt;-</span><span class="w"> </span><span class="nf">mean</span><span class="p">(</span><span class="nf">abs</span><span class="p">(</span><span class="n">y_test_score</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">score_preds</span><span class="p">))</span>
+<span class="n">reg_r2</span><span class="w">   </span><span class="o">&lt;-</span><span class="w"> </span><span class="m">1</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="p">(</span><span class="nf">sum</span><span class="p">((</span><span class="n">y_test_score</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">score_preds</span><span class="p">)</span><span class="o">^</span><span class="m">2</span><span class="p">)</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="nf">sum</span><span class="p">((</span><span class="n">y_test_score</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="nf">mean</span><span class="p">(</span><span class="n">y_test_score</span><span class="p">))</span><span class="o">^</span><span class="m">2</span><span class="p">))</span>
+
+<span class="nf">cat</span><span class="p">(</span><span class="s">"\n======================================================\n"</span><span class="p">)</span>
+<span class="nf">cat</span><span class="p">(</span><span class="s">"          GRADELA EXAM SCORE FORECASTING METRICS       \n"</span><span class="p">)</span>
+<span class="nf">cat</span><span class="p">(</span><span class="s">"======================================================\n"</span><span class="p">)</span>
+<span class="nf">cat</span><span class="p">(</span><span class="nf">sprintf</span><span class="p">(</span><span class="s">"R-squared (R2)                 : %.4f (%.1f%% variance explained)\n"</span><span class="p">,</span><span class="w"> </span><span class="n">reg_r2</span><span class="p">,</span><span class="w"> </span><span class="n">reg_r2</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="m">100</span><span class="p">))</span>
+<span class="nf">cat</span><span class="p">(</span><span class="nf">sprintf</span><span class="p">(</span><span class="s">"Root Mean Squared Error (RMSE) : %.2f marks\n"</span><span class="p">,</span><span class="w"> </span><span class="n">reg_rmse</span><span class="p">))</span>
+<span class="nf">cat</span><span class="p">(</span><span class="nf">sprintf</span><span class="p">(</span><span class="s">"Mean Absolute Error (MAE)      : %.2f marks\n"</span><span class="p">,</span><span class="w"> </span><span class="n">reg_mae</span><span class="p">))</span>
+<span class="nf">cat</span><span class="p">(</span><span class="s">"======================================================\n\n"</span><span class="p">)</span>
+
+
+<span class="c1"># 3. ACTUAL VS. PREDICTED SCORE VISUALIZATION</span>
+
+<span class="nf">cat</span><span class="p">(</span><span class="s">"&gt;&gt;&gt; [3/3] Plotting Actual vs. Predicted Performance Curve...\n"</span><span class="p">)</span>
+
+<span class="n">plot_df</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="nf">data.frame</span><span class="p">(</span>
+<span class="w">  </span><span class="n">Actual</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">y_test_score</span><span class="p">,</span>
+<span class="w">  </span><span class="n">Predicted</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">score_preds</span><span class="p">,</span>
+<span class="w">  </span><span class="n">Risk</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">test_labels</span>
+<span class="p">)</span>
+
+<span class="n">p_reg</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="nf">ggplot</span><span class="p">(</span><span class="n">plot_df</span><span class="p">,</span><span class="w"> </span><span class="nf">aes</span><span class="p">(</span><span class="n">x</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">Actual</span><span class="p">,</span><span class="w"> </span><span class="n">y</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">Predicted</span><span class="p">,</span><span class="w"> </span><span class="n">color</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">Risk</span><span class="p">))</span><span class="w"> </span><span class="o">+</span>
+<span class="w">  </span><span class="nf">geom_point</span><span class="p">(</span><span class="n">alpha</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">0.6</span><span class="p">,</span><span class="w"> </span><span class="n">size</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">2</span><span class="p">)</span><span class="w"> </span><span class="o">+</span>
+<span class="w">  </span><span class="nf">geom_abline</span><span class="p">(</span><span class="n">slope</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">1</span><span class="p">,</span><span class="w"> </span><span class="n">intercept</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">0</span><span class="p">,</span><span class="w"> </span><span class="n">linetype</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">"dashed"</span><span class="p">,</span><span class="w"> </span><span class="n">color</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">"black"</span><span class="p">,</span><span class="w"> </span><span class="n">linewidth</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">1</span><span class="p">)</span><span class="w"> </span><span class="o">+</span>
+<span class="w">  </span><span class="nf">scale_color_manual</span><span class="p">(</span><span class="n">values</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">c</span><span class="p">(</span><span class="s">"High_Risk"</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">"#C0392B"</span><span class="p">,</span><span class="w"> </span><span class="s">"Normal"</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">"#2980B9"</span><span class="p">))</span><span class="w"> </span><span class="o">+</span>
+<span class="w">  </span><span class="nf">theme_minimal</span><span class="p">()</span><span class="w"> </span><span class="o">+</span>
+<span class="w">  </span><span class="nf">labs</span><span class="p">(</span>
+<span class="w">    </span><span class="n">title</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">"GRADELA: Actual vs. Predicted Exam Performance"</span><span class="p">,</span>
+<span class="w">    </span><span class="n">subtitle</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">sprintf</span><span class="p">(</span><span class="s">"R2 = %.3f | RMSE = %.2f marks"</span><span class="p">,</span><span class="w"> </span><span class="n">reg_r2</span><span class="p">,</span><span class="w"> </span><span class="n">reg_rmse</span><span class="p">),</span>
+<span class="w">    </span><span class="n">x</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">"Actual Final Exam Score"</span><span class="p">,</span>
+<span class="w">    </span><span class="n">y</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">"Predicted Exam Score"</span><span class="p">,</span>
+<span class="w">    </span><span class="n">color</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">"Intervention Group"</span>
+<span class="w">  </span><span class="p">)</span>
+
+<span class="nf">print</span><span class="p">(</span><span class="n">p_reg</span><span class="p">)</span>
+
+<span class="c1"># --- Cell 7: Executed Pipeline Block ---</span>
+<span class="c1"># GRADELA PART 4: EXECUTIVE MODEL BENCHMARKING &amp; IEEE-STYLE REPORTING</span>
+
+<span class="nf">cat</span><span class="p">(</span><span class="s">"&gt;&gt;&gt; [1/2] Computing standardized evaluation metrics on test partition...\n"</span><span class="p">)</span>
+
+<span class="n">calc_metrics</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="kr">function</span><span class="p">(</span><span class="n">pred_class</span><span class="p">,</span><span class="w"> </span><span class="n">pred_prob</span><span class="p">,</span><span class="w"> </span><span class="n">true_class</span><span class="p">,</span><span class="w"> </span><span class="n">model_name</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="n">cm</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="n">caret</span><span class="o">::</span><span class="nf">confusionMatrix</span><span class="p">(</span><span class="n">pred_class</span><span class="p">,</span><span class="w"> </span><span class="n">true_class</span><span class="p">,</span><span class="w"> </span><span class="n">positive</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">"High_Risk"</span><span class="p">)</span>
+
+<span class="w">  </span><span class="c1"># Ensure explicit levels and direction for robust AUC calculation</span>
+<span class="w">  </span><span class="n">roc_obj</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="n">pROC</span><span class="o">::</span><span class="nf">roc</span><span class="p">(</span><span class="n">response</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">true_class</span><span class="p">,</span>
+<span class="w">                       </span><span class="n">predictor</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">as.numeric</span><span class="p">(</span><span class="n">pred_prob</span><span class="p">),</span>
+<span class="w">                       </span><span class="n">levels</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">c</span><span class="p">(</span><span class="s">"Normal"</span><span class="p">,</span><span class="w"> </span><span class="s">"High_Risk"</span><span class="p">),</span>
+<span class="w">                       </span><span class="n">direction</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">"&lt;"</span><span class="p">,</span>
+<span class="w">                       </span><span class="n">quiet</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">TRUE</span><span class="p">)</span>
+
+<span class="w">  </span><span class="c1"># Extract metrics safely (handling potential NAs)</span>
+<span class="w">  </span><span class="n">safe_val</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="kr">function</span><span class="p">(</span><span class="n">val</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="kr">if</span><span class="w"> </span><span class="p">(</span><span class="nf">is.null</span><span class="p">(</span><span class="n">val</span><span class="p">)</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="nf">is.na</span><span class="p">(</span><span class="n">val</span><span class="p">))</span><span class="w"> </span><span class="kr">return</span><span class="p">(</span><span class="m">0.0</span><span class="p">)</span>
+<span class="w">    </span><span class="kr">return</span><span class="p">(</span><span class="nf">as.numeric</span><span class="p">(</span><span class="n">val</span><span class="p">))</span>
+<span class="w">  </span><span class="p">}</span>
+
+<span class="w">  </span><span class="n">acc</span><span class="w">   </span><span class="o">&lt;-</span><span class="w"> </span><span class="nf">safe_val</span><span class="p">(</span><span class="n">cm</span><span class="o">$</span><span class="n">overall</span><span class="p">[</span><span class="s">"Accuracy"</span><span class="p">])</span>
+<span class="w">  </span><span class="n">sens</span><span class="w">  </span><span class="o">&lt;-</span><span class="w"> </span><span class="nf">safe_val</span><span class="p">(</span><span class="n">cm</span><span class="o">$</span><span class="n">byClass</span><span class="p">[</span><span class="s">"Sensitivity"</span><span class="p">])</span>
+<span class="w">  </span><span class="n">spec</span><span class="w">  </span><span class="o">&lt;-</span><span class="w"> </span><span class="nf">safe_val</span><span class="p">(</span><span class="n">cm</span><span class="o">$</span><span class="n">byClass</span><span class="p">[</span><span class="s">"Specificity"</span><span class="p">])</span>
+<span class="w">  </span><span class="n">prec</span><span class="w">  </span><span class="o">&lt;-</span><span class="w"> </span><span class="nf">safe_val</span><span class="p">(</span><span class="n">cm</span><span class="o">$</span><span class="n">byClass</span><span class="p">[</span><span class="s">"Precision"</span><span class="p">])</span>
+<span class="w">  </span><span class="n">f1</span><span class="w">    </span><span class="o">&lt;-</span><span class="w"> </span><span class="nf">safe_val</span><span class="p">(</span><span class="n">cm</span><span class="o">$</span><span class="n">byClass</span><span class="p">[</span><span class="s">"F1"</span><span class="p">])</span>
+<span class="w">  </span><span class="n">auc_v</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="nf">safe_val</span><span class="p">(</span><span class="nf">as.numeric</span><span class="p">(</span><span class="n">pROC</span><span class="o">::</span><span class="nf">auc</span><span class="p">(</span><span class="n">roc_obj</span><span class="p">)))</span>
+
+<span class="w">  </span><span class="nf">data.frame</span><span class="p">(</span>
+<span class="w">    </span><span class="n">Model</span><span class="w">       </span><span class="o">=</span><span class="w"> </span><span class="n">model_name</span><span class="p">,</span>
+<span class="w">    </span><span class="n">Accuracy</span><span class="w">    </span><span class="o">=</span><span class="w"> </span><span class="nf">sprintf</span><span class="p">(</span><span class="s">"%.4f"</span><span class="p">,</span><span class="w"> </span><span class="n">acc</span><span class="p">),</span>
+<span class="w">    </span><span class="n">Sensitivity</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">sprintf</span><span class="p">(</span><span class="s">"%.4f"</span><span class="p">,</span><span class="w"> </span><span class="n">sens</span><span class="p">),</span>
+<span class="w">    </span><span class="n">Specificity</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">sprintf</span><span class="p">(</span><span class="s">"%.4f"</span><span class="p">,</span><span class="w"> </span><span class="n">spec</span><span class="p">),</span>
+<span class="w">    </span><span class="n">Precision</span><span class="w">   </span><span class="o">=</span><span class="w"> </span><span class="nf">sprintf</span><span class="p">(</span><span class="s">"%.4f"</span><span class="p">,</span><span class="w"> </span><span class="n">prec</span><span class="p">),</span>
+<span class="w">    </span><span class="n">F1_Score</span><span class="w">    </span><span class="o">=</span><span class="w"> </span><span class="nf">sprintf</span><span class="p">(</span><span class="s">"%.4f"</span><span class="p">,</span><span class="w"> </span><span class="n">f1</span><span class="p">),</span>
+<span class="w">    </span><span class="n">AUC_ROC</span><span class="w">     </span><span class="o">=</span><span class="w"> </span><span class="nf">sprintf</span><span class="p">(</span><span class="s">"%.4f"</span><span class="p">,</span><span class="w"> </span><span class="n">auc_v</span><span class="p">),</span>
+<span class="w">    </span><span class="n">stringsAsFactors</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">FALSE</span>
+<span class="w">  </span><span class="p">)</span>
+<span class="p">}</span>
+
+<span class="n">benchmark_rf</span><span class="w">  </span><span class="o">&lt;-</span><span class="w"> </span><span class="nf">calc_metrics</span><span class="p">(</span><span class="n">pred_rf</span><span class="p">,</span><span class="w"> </span><span class="n">prob_rf</span><span class="p">,</span><span class="w"> </span><span class="n">test_labels</span><span class="p">,</span><span class="w"> </span><span class="s">"Random Forest"</span><span class="p">)</span>
+<span class="n">benchmark_gbm</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="nf">calc_metrics</span><span class="p">(</span><span class="n">pred_gbm</span><span class="p">,</span><span class="w"> </span><span class="n">prob_gbm</span><span class="p">,</span><span class="w"> </span><span class="n">test_labels</span><span class="p">,</span><span class="w"> </span><span class="s">"Gradient Boosting (GBM)"</span><span class="p">)</span>
+<span class="n">benchmark_glm</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="nf">calc_metrics</span><span class="p">(</span><span class="n">pred_glm</span><span class="p">,</span><span class="w"> </span><span class="n">prob_glm</span><span class="p">,</span><span class="w"> </span><span class="n">test_labels</span><span class="p">,</span><span class="w"> </span><span class="s">"Logistic Regression"</span><span class="p">)</span>
+
+<span class="n">benchmark_summary</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="n">dplyr</span><span class="o">::</span><span class="nf">bind_rows</span><span class="p">(</span><span class="n">benchmark_rf</span><span class="p">,</span><span class="w"> </span><span class="n">benchmark_gbm</span><span class="p">,</span><span class="w"> </span><span class="n">benchmark_glm</span><span class="p">)</span>
+
+
+<span class="c1"># 2. IEEE-COMPLIANT BENCHMARK TABLE GENERATION</span>
+
+<span class="nf">cat</span><span class="p">(</span><span class="s">"&gt;&gt;&gt; [2/2] Generating IEEE Format Benchmark Table...\n\n"</span><span class="p">)</span>
+
+<span class="n">col_names_header</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="nf">sprintf</span><span class="p">(</span><span class="s">"%-26s | %-10s | %-11s | %-11s | %-10s | %-10s | %-8s\n"</span><span class="p">,</span>
+<span class="w">                            </span><span class="s">"Algorithm"</span><span class="p">,</span><span class="w"> </span><span class="s">"Accuracy"</span><span class="p">,</span><span class="w"> </span><span class="s">"Sensitivity"</span><span class="p">,</span><span class="w"> </span><span class="s">"Specificity"</span><span class="p">,</span><span class="w"> </span><span class="s">"Precision"</span><span class="p">,</span><span class="w"> </span><span class="s">"F1-Score"</span><span class="p">,</span><span class="w"> </span><span class="s">"AUC-ROC"</span><span class="p">)</span>
+<span class="n">separator_line</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="nf">paste0</span><span class="p">(</span><span class="nf">paste</span><span class="p">(</span><span class="nf">rep</span><span class="p">(</span><span class="s">"-"</span><span class="p">,</span><span class="w"> </span><span class="m">100</span><span class="p">),</span><span class="w"> </span><span class="n">collapse</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">""</span><span class="p">),</span><span class="w"> </span><span class="s">"\n"</span><span class="p">)</span>
+<span class="n">double_line</span><span class="w">    </span><span class="o">&lt;-</span><span class="w"> </span><span class="nf">paste0</span><span class="p">(</span><span class="nf">paste</span><span class="p">(</span><span class="nf">rep</span><span class="p">(</span><span class="s">"="</span><span class="p">,</span><span class="w"> </span><span class="m">100</span><span class="p">),</span><span class="w"> </span><span class="n">collapse</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">""</span><span class="p">),</span><span class="w"> </span><span class="s">"\n"</span><span class="p">)</span>
+
+<span class="n">ieee_banner</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="nf">paste0</span><span class="p">(</span>
+<span class="w">  </span><span class="s">"TABLE I\n"</span><span class="p">,</span>
+<span class="w">  </span><span class="s">"PERFORMANCE METRICS EVALUATION FOR EARLY ACADEMIC INTERVENTION PREDICTION (TEST PARTITION N = "</span><span class="p">,</span><span class="w"> </span><span class="nf">length</span><span class="p">(</span><span class="n">test_labels</span><span class="p">),</span><span class="w"> </span><span class="s">")\n"</span><span class="p">,</span>
+<span class="w">  </span><span class="n">double_line</span><span class="p">,</span>
+<span class="w">  </span><span class="n">col_names_header</span><span class="p">,</span>
+<span class="w">  </span><span class="n">separator_line</span>
+<span class="p">)</span>
+
+<span class="nf">cat</span><span class="p">(</span><span class="n">ieee_banner</span><span class="p">)</span>
+<span class="kr">for</span><span class="w"> </span><span class="p">(</span><span class="n">i</span><span class="w"> </span><span class="kr">in</span><span class="w"> </span><span class="m">1</span><span class="o">:</span><span class="nf">nrow</span><span class="p">(</span><span class="n">benchmark_summary</span><span class="p">))</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="n">row</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="n">benchmark_summary</span><span class="p">[</span><span class="n">i</span><span class="p">,</span><span class="w"> </span><span class="p">]</span>
+<span class="w">  </span><span class="nf">cat</span><span class="p">(</span><span class="nf">sprintf</span><span class="p">(</span><span class="s">"%-26s | %-10s | %-11s | %-11s | %-10s | %-10s | %-8s\n"</span><span class="p">,</span>
+<span class="w">              </span><span class="n">row</span><span class="o">$</span><span class="n">Model</span><span class="p">,</span><span class="w"> </span><span class="n">row</span><span class="o">$</span><span class="n">Accuracy</span><span class="p">,</span><span class="w"> </span><span class="n">row</span><span class="o">$</span><span class="n">Sensitivity</span><span class="p">,</span><span class="w"> </span><span class="n">row</span><span class="o">$</span><span class="n">Specificity</span><span class="p">,</span><span class="w"> </span><span class="n">row</span><span class="o">$</span><span class="n">Precision</span><span class="p">,</span><span class="w"> </span><span class="n">row</span><span class="o">$</span><span class="n">F1_Score</span><span class="p">,</span><span class="w"> </span><span class="n">row</span><span class="o">$</span><span class="n">AUC_ROC</span><span class="p">))</span>
+<span class="p">}</span>
+<span class="nf">cat</span><span class="p">(</span><span class="n">double_line</span><span class="p">)</span>
+<span class="nf">cat</span><span class="p">(</span><span class="s">"Note: Positive Class = 'High_Risk'. Sensitivity denotes Recall for proactive identification.\n\n"</span><span class="p">)</span>
+
+<span class="c1"># Safely write to file</span>
+<span class="nf">writeLines</span><span class="p">(</span>
+<span class="w">  </span><span class="nf">c</span><span class="p">(</span>
+<span class="w">    </span><span class="n">ieee_banner</span><span class="p">,</span>
+<span class="w">    </span><span class="nf">sapply</span><span class="p">(</span><span class="m">1</span><span class="o">:</span><span class="nf">nrow</span><span class="p">(</span><span class="n">benchmark_summary</span><span class="p">),</span><span class="w"> </span><span class="kr">function</span><span class="p">(</span><span class="n">i</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">      </span><span class="n">r</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="n">benchmark_summary</span><span class="p">[</span><span class="n">i</span><span class="p">,</span><span class="w"> </span><span class="p">]</span>
+<span class="w">      </span><span class="nf">sprintf</span><span class="p">(</span><span class="s">"%-26s | %-10s | %-11s | %-11s | %-10s | %-10s | %-8s"</span><span class="p">,</span>
+<span class="w">              </span><span class="n">r</span><span class="o">$</span><span class="n">Model</span><span class="p">,</span><span class="w"> </span><span class="n">r</span><span class="o">$</span><span class="n">Accuracy</span><span class="p">,</span><span class="w"> </span><span class="n">r</span><span class="o">$</span><span class="n">Sensitivity</span><span class="p">,</span><span class="w"> </span><span class="n">r</span><span class="o">$</span><span class="n">Specificity</span><span class="p">,</span><span class="w"> </span><span class="n">r</span><span class="o">$</span><span class="n">Precision</span><span class="p">,</span><span class="w"> </span><span class="n">r</span><span class="o">$</span><span class="n">F1_Score</span><span class="p">,</span><span class="w"> </span><span class="n">r</span><span class="o">$</span><span class="n">AUC_ROC</span><span class="p">)</span>
+<span class="w">    </span><span class="p">}),</span>
+<span class="w">    </span><span class="n">double_line</span>
+<span class="w">  </span><span class="p">),</span>
+<span class="w">  </span><span class="n">con</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">"GRADELA_IEEE_Benchmark_Table.txt"</span>
+<span class="p">)</span>
+
+
+<span class="c1"># 3. IEEE-STYLE BLACK-AND-WHITE VISUAL PLOT</span>
+
+<span class="n">metrics_long</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="n">benchmark_summary</span><span class="w"> </span><span class="o">%&gt;%</span>
+<span class="w">  </span><span class="n">tidyr</span><span class="o">::</span><span class="nf">pivot_longer</span><span class="p">(</span><span class="n">cols</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">-</span><span class="n">Model</span><span class="p">,</span><span class="w"> </span><span class="n">names_to</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">"Metric"</span><span class="p">,</span><span class="w"> </span><span class="n">values_to</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">"Value"</span><span class="p">)</span><span class="w"> </span><span class="o">%&gt;%</span>
+<span class="w">  </span><span class="n">dplyr</span><span class="o">::</span><span class="nf">mutate</span><span class="p">(</span><span class="n">Value</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">as.numeric</span><span class="p">(</span><span class="n">Value</span><span class="p">))</span>
+
+<span class="n">p_ieee</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="nf">ggplot</span><span class="p">(</span><span class="n">metrics_long</span><span class="p">,</span><span class="w"> </span><span class="nf">aes</span><span class="p">(</span><span class="n">x</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">Metric</span><span class="p">,</span><span class="w"> </span><span class="n">y</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">Value</span><span class="p">,</span><span class="w"> </span><span class="n">fill</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">Model</span><span class="p">))</span><span class="w"> </span><span class="o">+</span>
+<span class="w">  </span><span class="nf">geom_bar</span><span class="p">(</span><span class="n">stat</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">"identity"</span><span class="p">,</span><span class="w"> </span><span class="n">position</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">position_dodge</span><span class="p">(</span><span class="m">0.8</span><span class="p">),</span><span class="w"> </span><span class="n">width</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">0.7</span><span class="p">,</span><span class="w"> </span><span class="n">color</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">"black"</span><span class="p">)</span><span class="w"> </span><span class="o">+</span>
+<span class="w">  </span><span class="nf">scale_fill_manual</span><span class="p">(</span><span class="n">values</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">c</span><span class="p">(</span><span class="s">"Random Forest"</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">"#1A1A1A"</span><span class="p">,</span>
+<span class="w">                               </span><span class="s">"Gradient Boosting (GBM)"</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">"#7F7F7F"</span><span class="p">,</span>
+<span class="w">                               </span><span class="s">"Logistic Regression"</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">"#D9D9D9"</span><span class="p">))</span><span class="w"> </span><span class="o">+</span>
+<span class="w">  </span><span class="nf">theme_classic</span><span class="p">()</span><span class="w"> </span><span class="o">+</span>
+<span class="w">  </span><span class="nf">theme</span><span class="p">(</span>
+<span class="w">    </span><span class="n">text</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">element_text</span><span class="p">(</span><span class="n">color</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">"black"</span><span class="p">),</span>
+<span class="w">    </span><span class="n">axis.title</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">element_text</span><span class="p">(</span><span class="n">face</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">"bold"</span><span class="p">,</span><span class="w"> </span><span class="n">size</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">11</span><span class="p">),</span>
+<span class="w">    </span><span class="n">axis.text</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">element_text</span><span class="p">(</span><span class="n">color</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">"black"</span><span class="p">,</span><span class="w"> </span><span class="n">size</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">10</span><span class="p">),</span>
+<span class="w">    </span><span class="n">legend.position</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">"top"</span><span class="p">,</span>
+<span class="w">    </span><span class="n">legend.title</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">element_blank</span><span class="p">(),</span>
+<span class="w">    </span><span class="n">legend.text</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">element_text</span><span class="p">(</span><span class="n">size</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">9</span><span class="p">)</span>
+<span class="w">  </span><span class="p">)</span><span class="w"> </span><span class="o">+</span>
+<span class="w">  </span><span class="nf">labs</span><span class="p">(</span>
+<span class="w">    </span><span class="n">title</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">"Fig. 1. Comparative Validation Performance Across Machine Learning Models"</span><span class="p">,</span>
+<span class="w">    </span><span class="n">x</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">"Performance Metric"</span><span class="p">,</span>
+<span class="w">    </span><span class="n">y</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">"Score Value [0.0 - 1.0]"</span>
+<span class="w">  </span><span class="p">)</span><span class="w"> </span><span class="o">+</span>
+<span class="w">  </span><span class="nf">ylim</span><span class="p">(</span><span class="m">0</span><span class="p">,</span><span class="w"> </span><span class="m">1.05</span><span class="p">)</span>
+
+<span class="nf">print</span><span class="p">(</span><span class="n">p_ieee</span><span class="p">)</span>
+
+<span class="c1"># --- Cell 8: Executed Pipeline Block ---</span>
+<span class="c1"># GRADELA PART 5: MODEL ARTIFACT SERIALIZATION &amp; BATCH INFERENCE PIPELINE</span>
+
+<span class="c1"># 1. SAVE PRODUCTION ARTIFACTS</span>
+<span class="nf">cat</span><span class="p">(</span><span class="s">"&gt;&gt;&gt; [1/3] Serializing production models and deployment metadata...\n"</span><span class="p">)</span>
+
+<span class="kr">if</span><span class="w"> </span><span class="p">(</span><span class="o">!</span><span class="nf">dir.exists</span><span class="p">(</span><span class="s">"models"</span><span class="p">))</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="nf">dir.create</span><span class="p">(</span><span class="s">"models"</span><span class="p">)</span>
+<span class="p">}</span>
+
+<span class="c1"># Ensure cohort_summary exists</span>
+<span class="kr">if</span><span class="w"> </span><span class="p">(</span><span class="o">!</span><span class="nf">exists</span><span class="p">(</span><span class="s">"cohort_summary"</span><span class="p">))</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="n">cohort_summary</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="n">df_model</span><span class="w"> </span><span class="o">%&gt;%</span>
+<span class="w">    </span><span class="nf">group_by</span><span class="p">(</span><span class="n">risk_status</span><span class="p">)</span><span class="w"> </span><span class="o">%&gt;%</span>
+<span class="w">    </span><span class="nf">summarise</span><span class="p">(</span><span class="nf">across</span><span class="p">(</span><span class="nf">where</span><span class="p">(</span><span class="n">is.numeric</span><span class="p">),</span><span class="w"> </span><span class="o">~</span><span class="w"> </span><span class="nf">round</span><span class="p">(</span><span class="nf">mean</span><span class="p">(</span><span class="n">.</span><span class="p">,</span><span class="w"> </span><span class="n">na.rm</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">TRUE</span><span class="p">),</span><span class="w"> </span><span class="m">2</span><span class="p">)),</span><span class="w"> </span><span class="n">.groups</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">"drop"</span><span class="p">)</span>
+<span class="p">}</span>
+
+<span class="c1"># Standardized consistent lowercase filenames</span>
+<span class="nf">saveRDS</span><span class="p">(</span><span class="n">fit_rf</span><span class="p">,</span><span class="w"> </span><span class="s">"models/gradela_classifier_rf.rds"</span><span class="p">)</span>
+<span class="nf">saveRDS</span><span class="p">(</span><span class="n">fit_reg_rf</span><span class="p">,</span><span class="w"> </span><span class="s">"models/gradela_regressor_rf.rds"</span><span class="p">)</span>
+
+<span class="c1"># Extract categorical factor levels from training data</span>
+<span class="n">factor_levels_map</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="nf">list</span><span class="p">()</span>
+<span class="kr">for</span><span class="w"> </span><span class="p">(</span><span class="n">col_name</span><span class="w"> </span><span class="kr">in</span><span class="w"> </span><span class="nf">colnames</span><span class="p">(</span><span class="n">features</span><span class="p">))</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="kr">if</span><span class="w"> </span><span class="p">(</span><span class="nf">is.factor</span><span class="p">(</span><span class="n">features</span><span class="p">[[</span><span class="n">col_name</span><span class="p">]]))</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="n">factor_levels_map</span><span class="p">[[</span><span class="n">col_name</span><span class="p">]]</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="nf">levels</span><span class="p">(</span><span class="n">features</span><span class="p">[[</span><span class="n">col_name</span><span class="p">]])</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="p">}</span>
+
+<span class="c1"># Save inference metadata</span>
+<span class="n">inference_meta</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="nf">list</span><span class="p">(</span>
+<span class="w">  </span><span class="n">risk_threshold</span><span class="w">  </span><span class="o">=</span><span class="w"> </span><span class="n">risk_threshold</span><span class="p">,</span>
+<span class="w">  </span><span class="n">feature_names</span><span class="w">   </span><span class="o">=</span><span class="w"> </span><span class="nf">colnames</span><span class="p">(</span><span class="n">features</span><span class="p">),</span>
+<span class="w">  </span><span class="n">factor_levels</span><span class="w">   </span><span class="o">=</span><span class="w"> </span><span class="n">factor_levels_map</span><span class="p">,</span>
+<span class="w">  </span><span class="n">cohort_baseline</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">cohort_summary</span>
+<span class="p">)</span>
+<span class="nf">saveRDS</span><span class="p">(</span><span class="n">inference_meta</span><span class="p">,</span><span class="w"> </span><span class="s">"models/gradela_metadata.rds"</span><span class="p">)</span>
+
+<span class="nf">cat</span><span class="p">(</span><span class="s">"[SAVED] Saved classifier to 'models/gradela_classifier_rf.rds'\n"</span><span class="p">)</span>
+<span class="nf">cat</span><span class="p">(</span><span class="s">"[SAVED] Saved regressor to  'models/gradela_regressor_rf.rds'\n"</span><span class="p">)</span>
+<span class="nf">cat</span><span class="p">(</span><span class="s">"[SAVED] Saved metadata to   'models/gradela_metadata.rds'\n\n"</span><span class="p">)</span>
+
+
+<span class="c1"># 2. DEFINE STANDALONE BATCH INFERENCE ENGINE DIRECTLY</span>
+<span class="nf">cat</span><span class="p">(</span><span class="s">"&gt;&gt;&gt; [2/3] Initializing batch inference engine...\n"</span><span class="p">)</span>
+
+<span class="n">run_gradela_inference</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="kr">function</span><span class="p">(</span><span class="n">input_csv_path</span><span class="p">,</span><span class="w"> </span><span class="n">output_csv_path</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">"gradela_batch_scored.csv"</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="nf">suppressPackageStartupMessages</span><span class="p">({</span>
+<span class="w">    </span><span class="nf">library</span><span class="p">(</span><span class="n">tidyverse</span><span class="p">)</span>
+<span class="w">    </span><span class="nf">library</span><span class="p">(</span><span class="n">randomForest</span><span class="p">)</span>
+<span class="w">    </span><span class="nf">library</span><span class="p">(</span><span class="n">caret</span><span class="p">)</span>
+<span class="w">  </span><span class="p">})</span>
+
+<span class="w">  </span><span class="c1"># Artifact check</span>
+<span class="w">  </span><span class="n">req_files</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="nf">c</span><span class="p">(</span><span class="s">"models/gradela_classifier_rf.rds"</span><span class="p">,</span>
+<span class="w">                 </span><span class="s">"models/gradela_regressor_rf.rds"</span><span class="p">,</span>
+<span class="w">                 </span><span class="s">"models/gradela_metadata.rds"</span><span class="p">)</span>
+<span class="w">  </span><span class="kr">for</span><span class="w"> </span><span class="p">(</span><span class="n">f</span><span class="w"> </span><span class="kr">in</span><span class="w"> </span><span class="n">req_files</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="kr">if</span><span class="w"> </span><span class="p">(</span><span class="o">!</span><span class="nf">file.exists</span><span class="p">(</span><span class="n">f</span><span class="p">))</span><span class="w"> </span><span class="p">{</span>
+<span class="w">      </span><span class="nf">stop</span><span class="p">(</span><span class="nf">sprintf</span><span class="p">(</span><span class="s">"Missing required model artifact: %s"</span><span class="p">,</span><span class="w"> </span><span class="n">f</span><span class="p">))</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="w">  </span><span class="p">}</span>
+
+<span class="w">  </span><span class="n">clf_model</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="nf">readRDS</span><span class="p">(</span><span class="s">"models/gradela_classifier_rf.rds"</span><span class="p">)</span>
+<span class="w">  </span><span class="n">reg_model</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="nf">readRDS</span><span class="p">(</span><span class="s">"models/gradela_regressor_rf.rds"</span><span class="p">)</span>
+<span class="w">  </span><span class="n">meta</span><span class="w">      </span><span class="o">&lt;-</span><span class="w"> </span><span class="nf">readRDS</span><span class="p">(</span><span class="s">"models/gradela_metadata.rds"</span><span class="p">)</span>
+
+<span class="w">  </span><span class="c1"># Ingest new raw cohort</span>
+<span class="w">  </span><span class="n">new_data_raw</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="nf">read.csv</span><span class="p">(</span><span class="n">input_csv_path</span><span class="p">,</span><span class="w"> </span><span class="n">stringsAsFactors</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">FALSE</span><span class="p">)</span>
+<span class="w">  </span><span class="nf">names</span><span class="p">(</span><span class="n">new_data_raw</span><span class="p">)</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="nf">tolower</span><span class="p">(</span><span class="nf">gsub</span><span class="p">(</span><span class="s">"[ .]"</span><span class="p">,</span><span class="w"> </span><span class="s">"_"</span><span class="p">,</span><span class="w"> </span><span class="nf">names</span><span class="p">(</span><span class="n">new_data_raw</span><span class="p">)))</span>
+
+<span class="w">  </span><span class="c1"># Imputation &amp; column harmonization</span>
+<span class="w">  </span><span class="n">clean_data</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="n">new_data_raw</span><span class="w"> </span><span class="o">%&gt;%</span>
+<span class="w">    </span><span class="nf">mutate</span><span class="p">(</span><span class="nf">across</span><span class="p">(</span><span class="nf">where</span><span class="p">(</span><span class="n">is.numeric</span><span class="p">),</span><span class="w"> </span><span class="o">~</span><span class="w"> </span><span class="nf">ifelse</span><span class="p">(</span><span class="nf">is.na</span><span class="p">(</span><span class="n">.</span><span class="p">),</span><span class="w"> </span><span class="nf">median</span><span class="p">(</span><span class="n">.</span><span class="p">,</span><span class="w"> </span><span class="n">na.rm</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">TRUE</span><span class="p">),</span><span class="w"> </span><span class="n">.</span><span class="p">)))</span><span class="w"> </span><span class="o">%&gt;%</span>
+<span class="w">    </span><span class="nf">mutate</span><span class="p">(</span><span class="nf">across</span><span class="p">(</span><span class="nf">where</span><span class="p">(</span><span class="n">is.character</span><span class="p">),</span><span class="w"> </span><span class="o">~</span><span class="w"> </span><span class="nf">ifelse</span><span class="p">(</span><span class="nf">is.na</span><span class="p">(</span><span class="n">.</span><span class="p">)</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="nf">trimws</span><span class="p">(</span><span class="n">.</span><span class="p">)</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="s">""</span><span class="p">,</span><span class="w"> </span><span class="s">"Unknown"</span><span class="p">,</span><span class="w"> </span><span class="nf">trimws</span><span class="p">(</span><span class="n">.</span><span class="p">))))</span>
+
+<span class="w">  </span><span class="c1"># Align factor levels with training structure</span>
+<span class="w">  </span><span class="kr">for</span><span class="w"> </span><span class="p">(</span><span class="n">f_name</span><span class="w"> </span><span class="kr">in</span><span class="w"> </span><span class="nf">names</span><span class="p">(</span><span class="n">meta</span><span class="o">$</span><span class="n">factor_levels</span><span class="p">))</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="kr">if</span><span class="w"> </span><span class="p">(</span><span class="n">f_name</span><span class="w"> </span><span class="o">%in%</span><span class="w"> </span><span class="nf">names</span><span class="p">(</span><span class="n">clean_data</span><span class="p">))</span><span class="w"> </span><span class="p">{</span>
+<span class="w">      </span><span class="n">clean_data</span><span class="p">[[</span><span class="n">f_name</span><span class="p">]]</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="nf">factor</span><span class="p">(</span><span class="n">clean_data</span><span class="p">[[</span><span class="n">f_name</span><span class="p">]],</span><span class="w"> </span><span class="n">levels</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">meta</span><span class="o">$</span><span class="n">factor_levels</span><span class="p">[[</span><span class="n">f_name</span><span class="p">]])</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="w">  </span><span class="p">}</span>
+
+<span class="w">  </span><span class="c1"># Ensure all necessary training features exist</span>
+<span class="w">  </span><span class="n">missing_cols</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="nf">setdiff</span><span class="p">(</span><span class="n">meta</span><span class="o">$</span><span class="n">feature_names</span><span class="p">,</span><span class="w"> </span><span class="nf">names</span><span class="p">(</span><span class="n">clean_data</span><span class="p">))</span>
+<span class="w">  </span><span class="kr">if</span><span class="w"> </span><span class="p">(</span><span class="nf">length</span><span class="p">(</span><span class="n">missing_cols</span><span class="p">)</span><span class="w"> </span><span class="o">&gt;</span><span class="w"> </span><span class="m">0</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nf">stop</span><span class="p">(</span><span class="nf">sprintf</span><span class="p">(</span><span class="s">"Input CSV is missing required features: %s"</span><span class="p">,</span><span class="w"> </span><span class="nf">paste</span><span class="p">(</span><span class="n">missing_cols</span><span class="p">,</span><span class="w"> </span><span class="n">collapse</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">", "</span><span class="p">)))</span>
+<span class="w">  </span><span class="p">}</span>
+
+<span class="w">  </span><span class="n">eval_data</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="nf">as.data.frame</span><span class="p">(</span><span class="n">clean_data</span><span class="p">[,</span><span class="w"> </span><span class="n">meta</span><span class="o">$</span><span class="n">feature_names</span><span class="p">])</span>
+
+<span class="w">  </span><span class="c1"># Run inference</span>
+<span class="w">  </span><span class="n">pred_risk</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="nf">predict</span><span class="p">(</span><span class="n">clf_model</span><span class="p">,</span><span class="w"> </span><span class="n">eval_data</span><span class="p">)</span>
+<span class="w">  </span><span class="n">prob_mat</span><span class="w">  </span><span class="o">&lt;-</span><span class="w"> </span><span class="nf">predict</span><span class="p">(</span><span class="n">clf_model</span><span class="p">,</span><span class="w"> </span><span class="n">eval_data</span><span class="p">,</span><span class="w"> </span><span class="n">type</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">"prob"</span><span class="p">)</span>
+<span class="w">  </span><span class="n">prob_risk</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="kr">if</span><span class="w"> </span><span class="p">(</span><span class="s">"High_Risk"</span><span class="w"> </span><span class="o">%in%</span><span class="w"> </span><span class="nf">colnames</span><span class="p">(</span><span class="n">prob_mat</span><span class="p">))</span><span class="w"> </span><span class="n">prob_mat</span><span class="p">[,</span><span class="w"> </span><span class="s">"High_Risk"</span><span class="p">]</span><span class="w"> </span><span class="kr">else</span><span class="w"> </span><span class="n">prob_mat</span><span class="p">[,</span><span class="w"> </span><span class="m">1</span><span class="p">]</span>
+<span class="w">  </span><span class="n">pred_exam</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="nf">predict</span><span class="p">(</span><span class="n">reg_model</span><span class="p">,</span><span class="w"> </span><span class="n">eval_data</span><span class="p">)</span>
+
+<span class="w">  </span><span class="c1"># Output table with tiers</span>
+<span class="w">  </span><span class="n">scored_df</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="n">clean_data</span><span class="w"> </span><span class="o">%&gt;%</span>
+<span class="w">    </span><span class="nf">mutate</span><span class="p">(</span>
+<span class="w">      </span><span class="n">gradela_predicted_status</span><span class="w">  </span><span class="o">=</span><span class="w"> </span><span class="nf">as.character</span><span class="p">(</span><span class="n">pred_risk</span><span class="p">),</span>
+<span class="w">      </span><span class="n">gradela_risk_probability</span><span class="w">  </span><span class="o">=</span><span class="w"> </span><span class="nf">round</span><span class="p">(</span><span class="nf">as.numeric</span><span class="p">(</span><span class="n">prob_risk</span><span class="p">),</span><span class="w"> </span><span class="m">4</span><span class="p">),</span>
+<span class="w">      </span><span class="n">gradela_estimated_score</span><span class="w">   </span><span class="o">=</span><span class="w"> </span><span class="nf">round</span><span class="p">(</span><span class="nf">as.numeric</span><span class="p">(</span><span class="n">pred_exam</span><span class="p">),</span><span class="w"> </span><span class="m">2</span><span class="p">),</span>
+<span class="w">      </span><span class="n">gradela_intervention_tier</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">case_when</span><span class="p">(</span>
+<span class="w">        </span><span class="n">gradela_risk_probability</span><span class="w"> </span><span class="o">&gt;=</span><span class="w"> </span><span class="m">0.75</span><span class="w"> </span><span class="o">~</span><span class="w"> </span><span class="s">"Tier 1: Immediate Counselor Intervention"</span><span class="p">,</span>
+<span class="w">        </span><span class="n">gradela_risk_probability</span><span class="w"> </span><span class="o">&gt;=</span><span class="w"> </span><span class="m">0.50</span><span class="w"> </span><span class="o">~</span><span class="w"> </span><span class="s">"Tier 2: Targeted Tutoring Support"</span><span class="p">,</span>
+<span class="w">        </span><span class="n">gradela_risk_probability</span><span class="w"> </span><span class="o">&gt;=</span><span class="w"> </span><span class="m">0.25</span><span class="w"> </span><span class="o">~</span><span class="w"> </span><span class="s">"Tier 3: Academic Watchlist"</span><span class="p">,</span>
+<span class="w">        </span><span class="kc">TRUE</span><span class="w"> </span><span class="o">~</span><span class="w"> </span><span class="s">"On-Track: Standard Curriculum"</span>
+<span class="w">      </span><span class="p">)</span>
+<span class="w">    </span><span class="p">)</span>
+
+<span class="w">  </span><span class="nf">write.csv</span><span class="p">(</span><span class="n">scored_df</span><span class="p">,</span><span class="w"> </span><span class="n">output_csv_path</span><span class="p">,</span><span class="w"> </span><span class="n">row.names</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">FALSE</span><span class="p">)</span>
+<span class="w">  </span><span class="nf">cat</span><span class="p">(</span><span class="nf">sprintf</span><span class="p">(</span><span class="s">"[SUCCESS] Processed %d records. Exported to: %s\n"</span><span class="p">,</span><span class="w"> </span><span class="nf">nrow</span><span class="p">(</span><span class="n">scored_df</span><span class="p">),</span><span class="w"> </span><span class="n">output_csv_path</span><span class="p">))</span>
+<span class="w">  </span><span class="kr">return</span><span class="p">(</span><span class="nf">invisible</span><span class="p">(</span><span class="n">scored_df</span><span class="p">))</span>
+<span class="p">}</span>
+
+
+<span class="c1"># 3. VERIFY INFERENCE PIPELINE WITH TEST BATCH</span>
+<span class="nf">cat</span><span class="p">(</span><span class="s">"&gt;&gt;&gt; [3/3] Simulating test batch scoring...\n"</span><span class="p">)</span>
+
+<span class="c1"># Extract sample validation batch</span>
+<span class="n">n_samples</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="nf">min</span><span class="p">(</span><span class="m">25</span><span class="p">,</span><span class="w"> </span><span class="nf">nrow</span><span class="p">(</span><span class="n">test_data</span><span class="p">))</span>
+<span class="n">sample_incoming_batch</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="n">test_data</span><span class="p">[</span><span class="m">1</span><span class="o">:</span><span class="n">n_samples</span><span class="p">,</span><span class="w"> </span><span class="p">]</span>
+<span class="nf">write.csv</span><span class="p">(</span><span class="n">sample_incoming_batch</span><span class="p">,</span><span class="w"> </span><span class="s">"sample_new_cohort.csv"</span><span class="p">,</span><span class="w"> </span><span class="n">row.names</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">FALSE</span><span class="p">)</span>
+
+<span class="c1"># Execute inference</span>
+<span class="n">scored_results</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="nf">run_gradela_inference</span><span class="p">(</span><span class="s">"sample_new_cohort.csv"</span><span class="p">,</span><span class="w"> </span><span class="s">"gradela_batch_scored.csv"</span><span class="p">)</span>
+
+<span class="nf">cat</span><span class="p">(</span><span class="s">"\nPreview of Scored New Students:\n"</span><span class="p">)</span>
+<span class="nf">print</span><span class="p">(</span><span class="nf">head</span><span class="p">(</span><span class="n">scored_results</span><span class="w"> </span><span class="o">%&gt;%</span><span class="w"> </span><span class="nf">select</span><span class="p">(</span>
+<span class="w">  </span><span class="n">gradela_predicted_status</span><span class="p">,</span>
+<span class="w">  </span><span class="n">gradela_risk_probability</span><span class="p">,</span>
+<span class="w">  </span><span class="n">gradela_estimated_score</span><span class="p">,</span>
+<span class="w">  </span><span class="n">gradela_intervention_tier</span>
+<span class="p">),</span><span class="w"> </span><span class="m">5</span><span class="p">))</span>
+
+<span class="nf">cat</span><span class="p">(</span><span class="s">"\n======================================================\n"</span><span class="p">)</span>
+<span class="nf">cat</span><span class="p">(</span><span class="s">"      GRADELA SYSTEM DEPLOYMENT READY FOR PRODUCTION   \n"</span><span class="p">)</span>
+<span class="nf">cat</span><span class="p">(</span><span class="s">"======================================================\n"</span><span class="p">)</span>
+<span class="nf">cat</span><span class="p">(</span><span class="s">"Generated Artifacts:\n"</span><span class="p">)</span>
+<span class="nf">cat</span><span class="p">(</span><span class="s">" 1. models/gradela_classifier_rf.rds  (Classification Model)\n"</span><span class="p">)</span>
+<span class="nf">cat</span><span class="p">(</span><span class="s">" 2. models/gradela_regressor_rf.rds   (Score Predictor)\n"</span><span class="p">)</span>
+<span class="nf">cat</span><span class="p">(</span><span class="s">" 3. models/gradela_metadata.rds       (Preprocessing Parameters)\n"</span><span class="p">)</span>
+<span class="nf">cat</span><span class="p">(</span><span class="s">" 4. sample_new_cohort.csv             (Sample Batch File)\n"</span><span class="p">)</span>
+<span class="nf">cat</span><span class="p">(</span><span class="s">" 5. gradela_batch_scored.csv          (Batch Results Output)\n"</span><span class="p">)</span>
+<span class="nf">cat</span><span class="p">(</span><span class="s">"======================================================\n"</span><span class="p">)</span>
+</pre></div></td></tr></table></div>
+
+  </div>
+
+  <script>
+    function copyCode() {
+      const codeLines = Array.from(document.querySelectorAll('.source-code td.code pre')).map(el => el.innerText).join('
+');
+      navigator.clipboard.writeText(codeLines).then(() => {
+        const btnText = document.getElementById('btnCopyText');
+        btnText.innerText = 'Copied!';
+        setTimeout(() => { btnText.innerText = 'Copy Code'; }, 2000);
+      }).catch(err => {
+        console.error('Failed to copy code: ', err);
+      });
+    }
+  </script>
+</body>
+</html>

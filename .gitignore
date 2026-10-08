@@ -49,3 +49,6 @@ Icon
 # Environment variables & temporary files
 .env
 *.log
+
+# Unzipped archive downloads
+Gradela-main/

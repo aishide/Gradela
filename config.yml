@@ -1,0 +1,80 @@
+# ==============================================================================
+# GRADELA: GRADient Evaluation & Learned Academic Performance Radar
+# Configuration Matrix for Proactive Student Telemetry & Risk Mitigation
+# Authors: Aishi De (23070521008) & Parthiv Abhani (23070521106)
+# Faculty Guide: Dr. Snehlata Wankhade | Subject: Business Intelligence
+# ==============================================================================
+
+project:
+  name: "GRADELA"
+  full_title: "GRADient Evaluation & Learned Academic Performance Radar"
+  version: "2.4.0"
+  target_cohort_size: 6607
+  authors:
+    - name: "Aishi De"
+      prn: "23070521008"
+      division: "Sem 7, Sec A"
+      role: "Machine Learning Architecture, SEI Formulation & Behavioral Modeling"
+    - name: "Parthiv Abhani"
+      prn: "23070521106"
+      division: "Sem 7, Sec B"
+      role: "Data Engineering, Pipeline Orchestration & Threshold Calibration"
+  guide: "Dr. Snehlata Wankhade"
+  department: "Business Intelligence, Computer Science & Engineering"
+
+paths:
+  raw_data: "data/raw/Student_Performance_Factors_Dataset.csv"
+  processed_dir: "data/processed/"
+  models_dir: "models/"
+  reports_dir: "reports/"
+  figures_dir: "reports/figures/"
+  intervention_roster: "reports/gradela_intervention_roster.csv"
+  student_alerts: "reports/student_risk_alerts.csv"
+  benchmark_table: "reports/GRADELA_IEEE_Benchmark_Table.txt"
+
+pipeline:
+  random_seed: 42
+  train_split_ratio: 0.80
+  cross_validation_folds: 5
+  risk_quantile_cutoff: 0.25 # 25th percentile boundary (Exam Score <= 65.0)
+  target_column: "exam_score"
+  binary_target_column: "risk_status"
+  positive_class: "High_Risk"
+  negative_class: "Normal"
+
+threshold_tuning:
+  baseline_tau: 0.50
+  optimal_tau: 0.38 # Calibrated threshold maximizing recall to 84.04%
+  recall_target: 0.8404
+  roc_auc_target: 0.9760
+
+risk_tiers:
+  tier_1_critical:
+    probability_min: 0.60
+    classification: "Critical Risk (Tier 1)"
+    action: "Immediate advisor dispatch within 48h; mandatory 1-on-1 diagnostic sessions; structured study hall enrollment."
+  tier_2_moderate:
+    probability_min: 0.38
+    classification: "Moderate Risk (Tier 2)"
+    action: "Placement into peer-led study pods; automated bi-weekly attendance check pings; study-skills workshops."
+  tier_3_low:
+    probability_min: 0.00
+    classification: "Low Risk / On-Track (Tier 3)"
+    action: "Standard curriculum monitoring; open access to self-directed resource repositories."
+
+models:
+  random_forest_classification:
+    ntree: 100
+    importance: true
+  gradient_boosting:
+    n_trees: 100
+    interaction_depth: 3
+    shrinkage: 0.1
+  logistic_regression:
+    family: "binomial"
+  random_forest_regression:
+    ntree: 120
+    importance: true
+  decision_tree_rules:
+    cp: 0.015
+    method: "class"

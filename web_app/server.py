@@ -1,9 +1,10 @@
 #!/usr/bin/env python3
 """
-EduPredict AI - Backend REST API Server
-Student Performance Prediction Using Data Science and Machine Learning
-Author: Parthiv Abhani (PRN: 23070521106)
-Semester 7 Data Science Mini Project
+GRADELA AI - Backend REST API Server
+Student Performance Prediction & Early Warning System
+Investigators: Aishi De (23070521008) & Parthiv Abhani (23070521106)
+Semester 7 Business Intelligence Mini Project
+Faculty Guide: Dr. Snehlata Wankhade
 """
 
 import os
@@ -226,24 +227,27 @@ def serve_index():
 def get_status():
     return jsonify({
         "status": "online",
-        "service": "EduPredict AI REST API",
+        "service": "GRADELA Academic Performance Radar API",
         "version": "1.0.0",
         "models_loaded": {
             "classification": clf_model is not None,
             "regression": reg_model is not None,
             "scaler": scaler is not None
         },
-        "student_author": "Parthiv Abhani (23070521106)",
-        "subject": "Data Science",
-        "faculty_guide": "Dr. Smita Singh",
-        "project": "Semester 7 Data Science Mini Project"
+        "investigators": "Aishi De (23070521008) & Parthiv Abhani (23070521106)",
+        "subject": "Business Intelligence",
+        "faculty_guide": "Dr. Snehlata Wankhade",
+        "project": "Semester 7 Business Intelligence Mini Project (CA 3)"
     })
 
 @app.route("/download-notebook", methods=["GET"])
 def download_notebook():
-    for d in [PROJECT_DIR, os.getcwd(), BASE_DIR]:
+    gradela_nb = "GRADELA_GRADient_Evaluation_&_Learned_Academic_Performance_Radar_(Aishi_De_&_Parthiv_Abhani).ipynb"
+    for d in [BASE_DIR, PROJECT_DIR, os.getcwd()]:
+        if os.path.exists(os.path.join(d, gradela_nb)):
+            return send_from_directory(d, gradela_nb, as_attachment=True)
         if os.path.exists(os.path.join(d, "student_performance_prediction.ipynb")):
-            return send_from_directory(d, "student_performance_prediction.ipynb", as_attachment=True)
+            return send_from_directory(d, "student_performance_prediction.ipynb", as_attachment=True, download_name=gradela_nb)
     return jsonify({"error": "Notebook file not found"}), 404
 
 @app.route("/api/metadata", methods=["GET"])

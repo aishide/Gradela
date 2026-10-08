@@ -1,7 +1,8 @@
 /**
- * EduPredict AI - Frontend Interactive Logic & Inference Engine
- * Author: Parthiv Abhani (PRN: 23070521106)
- * Semester 7 Data Science Mini Project
+ * GRADELA AI - Frontend Interactive Logic & Inference Engine
+ * Investigators: Aishi De (23070521008) & Parthiv Abhani (23070521106)
+ * Semester 7 Business Intelligence Mini Project
+ * Faculty Guide: Dr. Snehlata Wankhade
  */
 
 // Application State
@@ -120,10 +121,45 @@ function initNotebookViewer() {
   const downloadBtn = document.getElementById('btnDownloadNotebook');
   const iframe = document.getElementById('notebookIframe');
   const container = document.getElementById('notebookContainer');
+  const btnViewNotebook = document.getElementById('btnViewNotebook');
+  const btnViewRScript = document.getElementById('btnViewRScript');
+  const viewerFilename = document.getElementById('viewerFilename');
+  const btnOpenTabNotebook = document.getElementById('btnOpenTabNotebook');
 
   // File protocol fallback for download button
   if (downloadBtn && window.location.protocol === 'file:') {
-    downloadBtn.setAttribute('href', '../student_performance_prediction.ipynb');
+    downloadBtn.setAttribute('href', 'GRADELA_GRADient_Evaluation_&_Learned_Academic_Performance_Radar_(Aishi_De_&_Parthiv_Abhani).ipynb');
+  }
+
+  // Toggle between Executed R Notebook (.ipynb) and Raw R Script (.R)
+  if (btnViewNotebook && btnViewRScript && iframe) {
+    btnViewNotebook.addEventListener('click', () => {
+      iframe.src = 'notebook_preview.html';
+      btnViewNotebook.classList.add('primary');
+      btnViewNotebook.classList.remove('secondary');
+      btnViewRScript.classList.remove('primary');
+      btnViewRScript.classList.add('secondary');
+      if (viewerFilename) {
+        viewerFilename.textContent = 'GRADELA_GRADient_Evaluation_&_Learned_Academic_Performance_Radar_(Aishi_De_&_Parthiv_Abhani).ipynb (R Kernel)';
+      }
+      if (btnOpenTabNotebook) {
+        btnOpenTabNotebook.href = 'notebook_preview.html';
+      }
+    });
+
+    btnViewRScript.addEventListener('click', () => {
+      iframe.src = 'r_script_preview.html';
+      btnViewRScript.classList.add('primary');
+      btnViewRScript.classList.remove('secondary');
+      btnViewNotebook.classList.remove('primary');
+      btnViewNotebook.classList.add('secondary');
+      if (viewerFilename) {
+        viewerFilename.textContent = 'GRADELA_Pipeline.R (R Script from Gradela-main)';
+      }
+      if (btnOpenTabNotebook) {
+        btnOpenTabNotebook.href = 'r_script_preview.html';
+      }
+    });
   }
 
   // Reload action

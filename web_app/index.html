@@ -3,8 +3,8 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="description" content="EduPredict AI - Student Performance Prediction & Academic Risk Intelligence Platform. Semester 7 Data Science Mini Project by Parthiv Abhani.">
-  <title>EduPredict AI | Student Performance Prediction & Early Warning System</title>
+  <meta name="description" content="GRADELA - GRADient Evaluation & Learned Academic Performance Radar. Student Performance Prediction & Early Warning System. Semester 7 Business Intelligence Mini Project by Aishi De & Parthiv Abhani. Faculty Guide: Dr. Snehlata Wankhade.">
+  <title>GRADELA | Student Performance Prediction & Early Warning System</title>
   
   <!-- Modern Typography from Google Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -29,20 +29,20 @@
     <header class="app-header" id="appHeader">
       <div class="header-container">
         <div class="brand-group">
-          <div class="brand-icon" title="EduPredict AI">
+          <div class="brand-icon" title="GRADELA AI">
             <img src="assets/logo-icon.png" alt="Edu Logo" class="brand-logo-img">
           </div>
           <div class="brand-text">
-            <div class="brand-title">EduPredict <span class="gradient-text">AI</span></div>
-            <div class="brand-subtitle">Student Performance Intelligence • Data Science (Sem 7) • Guide: Dr. Smita Singh</div>
+            <div class="brand-title">GRADELA <span class="gradient-text">AI</span></div>
+            <div class="brand-subtitle">GRADient Evaluation &amp; Academic Radar • Business Intelligence (Sem 7) • Guide: Dr. Snehlata Wankhade</div>
           </div>
         </div>
 
         <div class="student-badge" title="Author & Faculty Guide Information">
           <span class="badge-dot"></span>
           <div class="student-info-col">
-            <div class="student-name">Parthiv Abhani <span class="student-id">PRN: 23070521106</span></div>
-            <div class="student-guide">Subject: <strong>Data Science</strong> | Guide: <strong>Dr. Smita Singh</strong></div>
+            <div class="student-name">Aishi De &amp; Parthiv Abhani <span class="student-id">Sem 7</span></div>
+            <div class="student-guide">Subject: <strong>Business Intelligence</strong> | Guide: <strong>Dr. Snehlata Wankhade</strong></div>
           </div>
         </div>
 
@@ -134,7 +134,7 @@
             </div>
           </div>
           <div class="banner-media">
-            <img src="assets/banner.jpg" alt="EduPredict AI Analytics Graphic" class="banner-img" onerror="this.style.display='none'">
+            <img src="assets/banner.jpg" alt="GRADELA AI Analytics Graphic" class="banner-img" onerror="this.style.display='none'">
           </div>
         </div>
 
@@ -600,23 +600,26 @@
           <div class="notebook-header-info">
             <div class="notebook-tag-row">
               <span class="banner-tag">Complete Executed Artifact</span>
-              <span class="notebook-meta-pill">Python 3.13 Kernel</span>
-              <span class="notebook-meta-pill">26 Sections Executed</span>
+              <span class="notebook-meta-pill">R Kernel (ir)</span>
+              <span class="notebook-meta-pill">GRADELA Pipeline Executed</span>
             </div>
-            <h2>Jupyter Notebook Proposed Solution</h2>
+            <h2>GRADELA R Jupyter Notebook Solution</h2>
             <p>
-              Full interactive preview of <code>student_performance_prediction.ipynb</code>: containing complete data ingestion, exploratory charts, formal hypothesis tests, dual-horizon model benchmarks, cross-validation, and production model serialization.
+              Full interactive preview of the GRADELA R programming notebook: containing complete 6,607-student cohort ingestion, exploratory correlation matrix, ensemble benchmarking (Random Forest, GBM, GLM), ROC-AUC evaluation, decision boundary tuning (&tau;* = 0.38), continuous score regression, and classroom intervention rules.
             </p>
             <div class="notebook-meta-chips">
-              <span class="meta-chip"><strong>Subject:</strong> Data Science (Sem 7)</span>
-              <span class="meta-chip"><strong>Guide:</strong> Dr. Smita Singh</span>
-              <span class="meta-chip"><strong>Student:</strong> Parthiv Abhani (23070521106)</span>
-              <span class="meta-chip"><strong>Status:</strong> Pre-Rendered with all Outputs</span>
+              <span class="meta-chip"><strong>Subject:</strong> Business Intelligence (Sem 7)</span>
+              <span class="meta-chip"><strong>Guide:</strong> Dr. Snehlata Wankhade</span>
+              <span class="meta-chip"><strong>Investigators:</strong> Aishi De (23070521008) &amp; Parthiv Abhani (23070521106)</span>
+              <span class="meta-chip"><strong>Status:</strong> Pre-Rendered with all Outputs &amp; Plots</span>
             </div>
           </div>
           <div class="notebook-actions">
-            <a href="/download-notebook" download="student_performance_prediction.ipynb" class="action-btn primary" id="btnDownloadNotebook" title="Download the original .ipynb file">
+            <a href="/download-notebook" download="GRADELA_GRADient_Evaluation_&_Learned_Academic_Performance_Radar_(Aishi_De_&_Parthiv_Abhani).ipynb" class="action-btn primary" id="btnDownloadNotebook" title="Download the complete GRADELA R Jupyter Notebook">
               <span>📥</span> Download .ipynb
+            </a>
+            <a href="GRADELA_Pipeline.R" download="GRADELA_Pipeline.R" class="action-btn secondary" id="btnDownloadRScript" title="Download the complete executable R pipeline script">
+              <span>📄</span> Download .R Script
             </a>
             <a href="notebook_preview.html" target="_blank" rel="noopener noreferrer" class="action-btn secondary" id="btnOpenTabNotebook" title="Open complete notebook preview in a new browser tab">
               <span>↗️</span> Open in New Tab
@@ -634,17 +637,25 @@
           <div class="notebook-viewer-toolbar">
             <div class="viewer-tab-tag">
               <span class="badge-dot"></span>
-              <span class="viewer-filename">student_performance_prediction.ipynb (Full Execution Output)</span>
+              <span class="viewer-filename" id="viewerFilename">GRADELA_GRADient_Evaluation_&amp;_Learned_Academic_Performance_Radar_(Aishi_De_&amp;_Parthiv_Abhani).ipynb (R Kernel)</span>
+            </div>
+            <div class="viewer-mode-toggle" id="viewerModeToggle" style="display: inline-flex; gap: 0.35rem; background: rgba(255,255,255,0.06); padding: 0.25rem; border-radius: 8px; border: 1px solid var(--border-subtle);">
+              <button type="button" class="action-btn primary" id="btnViewNotebook" style="padding: 0.3rem 0.75rem; font-size: 0.78rem; border-radius: 6px; cursor: pointer;" title="Show full executed R notebook with all plots &amp; outputs">
+                <span>📓</span> Executed R Notebook (.ipynb)
+              </button>
+              <button type="button" class="action-btn secondary" id="btnViewRScript" style="padding: 0.3rem 0.75rem; font-size: 0.78rem; border-radius: 6px; cursor: pointer;" title="Show raw executable R script from Gradela-main">
+                <span>📄</span> Raw R Script (.R)
+              </button>
             </div>
             <div class="viewer-actions-hint">
-              <span>Scroll within the viewer below to inspect every code cell, execution log, and embedded chart</span>
+              <span>Scroll within the viewer below to inspect every R code cell, execution log, and embedded chart</span>
             </div>
           </div>
           <div class="notebook-iframe-container" id="notebookContainer">
             <button type="button" class="fullscreen-exit-btn" id="btnExitFullscreenFloating" title="Exit Fullscreen (Esc)">
               <span>✕</span> Exit Fullscreen (Esc)
             </button>
-            <iframe src="notebook_preview.html" id="notebookIframe" class="notebook-iframe" title="Full Jupyter Notebook Solution Preview"></iframe>
+            <iframe src="notebook_preview.html" id="notebookIframe" class="notebook-iframe" title="GRADELA R Jupyter Notebook Solution Preview"></iframe>
           </div>
         </div>
       </section>
@@ -1055,10 +1066,10 @@
     <footer class="app-footer">
       <div class="footer-container">
         <div class="footer-left">
-          <strong>EduPredict AI</strong> : Continuous Assessment 3 (CA 3) Mini Project Implementation | Subject: <strong>Data Science</strong>
+          <strong>GRADELA</strong> : Continuous Assessment 3 (CA 3) Mini Project Implementation | Subject: <strong>Business Intelligence</strong> (Sem 7)
         </div>
         <div class="footer-right">
-          Author: <strong>Parthiv Abhani</strong> (PRN: 23070521106) • Under the Guidance of <strong>Dr. Smita Singh</strong>
+          Investigators: <strong>Aishi De</strong> (23070521008) &amp; <strong>Parthiv Abhani</strong> (23070521106) • Faculty Guide: <strong>Dr. Snehlata Wankhade</strong>
         </div>
       </div>
     </footer>
