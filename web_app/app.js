@@ -801,15 +801,15 @@ function renderBenchmarkCharts() {
           {
             label: 'Accuracy (%)',
             data: clsData.map(d => Math.round(d.acc * 1000) / 10),
-            backgroundColor: 'rgba(99, 102, 241, 0.75)',
-            borderColor: '#6366f1',
+            backgroundColor: 'rgba(16, 185, 129, 0.8)',
+            borderColor: '#10b981',
             borderWidth: 1,
             borderRadius: 6
           },
           {
             label: 'ROC-AUC (%)',
             data: clsData.map(d => Math.round(d.auc * 1000) / 10),
-            backgroundColor: 'rgba(6, 182, 212, 0.75)',
+            backgroundColor: 'rgba(6, 182, 212, 0.8)',
             borderColor: '#06b6d4',
             borderWidth: 1,
             borderRadius: 6
@@ -910,8 +910,8 @@ function initEdaCharts() {
           {
             label: 'Final Exam (G3)',
             data: [15, 12, 73, 220, 190, 102, 31, 6],
-            borderColor: '#818cf8',
-            backgroundColor: 'rgba(129, 140, 248, 0.15)',
+            borderColor: '#34d399',
+            backgroundColor: 'rgba(52, 211, 153, 0.18)',
             fill: true,
             tension: 0.35
           }
@@ -942,8 +942,8 @@ function initEdaCharts() {
           {
             label: 'Average Final Grade (G3)',
             data: [10.82, 11.75, 12.83, 13.91],
-            backgroundColor: 'rgba(99, 102, 241, 0.8)',
-            borderColor: '#6366f1',
+            backgroundColor: 'rgba(16, 185, 129, 0.85)',
+            borderColor: '#10b981',
             borderWidth: 1,
             borderRadius: 6
           }
@@ -1279,8 +1279,8 @@ async function checkBackendHealth() {
     label.innerHTML = '<span class="status-full">Local Client ML Active (Offline)</span><span class="status-mobile">Offline</span>';
   }
   if (badge) {
-    badge.style.background = 'rgba(99, 102, 241, 0.12)';
-    badge.style.borderColor = 'rgba(99, 102, 241, 0.3)';
+    badge.style.background = 'rgba(16, 185, 129, 0.12)';
+    badge.style.borderColor = 'rgba(16, 185, 129, 0.3)';
     badge.style.color = 'var(--primary)';
   }
 }

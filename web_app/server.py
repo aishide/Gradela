@@ -43,6 +43,13 @@ if not os.path.exists(DATA_DIR):
 app = Flask(__name__, static_folder=BASE_DIR, static_url_path="")
 CORS(app)
 
+@app.after_request
+def add_header(response):
+    response.headers['Cache-Control'] = 'no-store, no-cache, must-revalidate, max-age=0'
+    response.headers['Pragma'] = 'no-cache'
+    response.headers['Expires'] = '-1'
+    return response
+
 # Load Artifacts
 clf_model = None
 reg_model = None
