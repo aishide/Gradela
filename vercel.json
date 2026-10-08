@@ -1,11 +1,18 @@
 {
-  "framework": null,
-  "outputDirectory": "web_app",
   "cleanUrls": true,
+  "outputDirectory": "web_app",
   "rewrites": [
     {
       "source": "/download-notebook",
-      "destination": "/GRADELA_GRADient_Evaluation_&_Learned_Academic_Performance_Radar_(Aishi_De_&_Parthiv_Abhani).ipynb"
+      "destination": "/gradela_notebook.ipynb"
+    },
+    {
+      "source": "/web_app/index.html",
+      "destination": "/index.html"
+    },
+    {
+      "source": "/web_app/:path*",
+      "destination": "/:path*"
     }
   ]
 }
