@@ -378,5 +378,5 @@ def batch_predict():
 
 if __name__ == "__main__":
     port = int(os.environ.get("PORT", 5050))
-    print(f"EduPredict AI Web App Server running at http://localhost:{port}")
+    print(f"GRADELA Web App Server running at http://localhost:{port}")
     app.run(host="0.0.0.0", port=port, debug=False)

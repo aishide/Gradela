@@ -32,5 +32,5 @@ if [[ "$OSTYPE" == "darwin"* ]]; then
     open "http://localhost:$PORT"
 fi
 
-echo "EduPredict AI server running (PID: $SERVER_PID). Press Ctrl+C to terminate."
+echo "GRADELA AI server running (PID: $SERVER_PID). Press Ctrl+C to terminate."
 wait $SERVER_PID

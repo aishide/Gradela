@@ -9,7 +9,7 @@
 const AppState = {
   currentTab: 'simulatorTab',
   predictionMode: 'midterm', // 'early' or 'midterm'
-  theme: localStorage.getItem('edupredict_theme') || 'dark',
+  theme: localStorage.getItem('gradela_theme') || 'dark',
   apiAvailable: false,
   backendUrl: '', // auto-detected relative or localhost
   benchmarkSetting: 'midterm',
@@ -211,7 +211,7 @@ function initTheme() {
     themeBtn.addEventListener('click', () => {
       AppState.theme = AppState.theme === 'dark' ? 'light' : 'dark';
       document.documentElement.setAttribute('data-theme', AppState.theme);
-      localStorage.setItem('edupredict_theme', AppState.theme);
+      localStorage.setItem('gradela_theme', AppState.theme);
       refreshChartsTheme();
     });
   }
@@ -1237,7 +1237,7 @@ function exportScoredCsv() {
   const encodedUri = encodeURI(csvContent);
   const link = document.createElement('a');
   link.setAttribute('href', encodedUri);
-  link.setAttribute('download', `edupredict_scored_students_${Date.now()}.csv`);
+  link.setAttribute('download', `gradela_scored_cohort_${Date.now()}.csv`);
   document.body.appendChild(link);
   link.click();
   document.body.removeChild(link);
